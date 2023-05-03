@@ -10,6 +10,7 @@ const socketio = require('socket.io');
 const { parse } = require('cookie');
 const shop = require('./shop.json');
 const achievements = require('./achievements.json');
+const leaderboardIgnore = require('./leaderboardIgnore.json');
 const { OAuth2Client } = require('google-auth-library');
 const dbUptime = require('./dbUptime.js');
 const axios = require('axios');
@@ -1546,7 +1547,9 @@ setInterval(() => {
 
   // get all user IDs
   getUsers().then((ids) => {
-    users = ids.map((id) => getUserPair(id));
+    users = ids
+      .filter((id) => !leaderboardIgnore.includes(id))
+      .map((id) => getUserPair(id));
 
     // await promises
     Promise.all(users).then((users) => {
