@@ -1,0 +1,149 @@
+{
+  "prizeWheel": {
+    "price": 6
+  },
+  "levels": {
+    "reward": 5,
+    "skipPrice": 100
+  },
+  "shelves": {
+    "dailyPrize": {
+      "name": "Prize wheels",
+      "items": {
+        "dailySpin": {
+          "name": "Daily spin",
+          "buyingDisabled": true,
+          "prizeWheel": true,
+          "chance": 0,
+          "persistent": true
+        },
+        "normalSpin": {
+          "name": "Prize wheel",
+          "price": 6,
+          "chance": 0,
+          "persistent": true,
+          "prizeWheel": true,
+          "buyingDisabled": true
+        }
+      }
+    },
+    "coins": {
+      "name": "Coins",
+      "selectingDisabled": true,
+      "items": {
+        "10coins": {
+          "price": 0,
+          "name": "10 coins",
+          "coins": 10
+        },
+        "25coins": {
+          "price": 0,
+          "name": "25 coins",
+          "coins": 25
+        },
+        "100coins": {
+          "price": 50,
+          "name": "100 coins",
+          "coins": 100
+        },
+        "10coinsSpin": {
+          "buyingDisabled": true,
+          "prizeWheel": true,
+          "chance": 15,
+          "name": "10 coins",
+          "coins": 10,
+          "persistent": true,
+          "invisible": true
+        },
+        "25coinsSpin": {
+          "buyingDisabled": true,
+          "prizeWheel": true,
+          "chance": 10,
+          "name": "25 coins",
+          "coins": 25,
+          "persistent": true,
+          "invisible": true
+        }
+      }
+    },
+    "nickColors": {
+      "name": "Nick colors",
+      "items": {
+        "red": {
+          "price": 5
+        },
+        "blue": {
+          "price": 10
+        },
+        "green": {
+          "price": 5
+        },
+        "purple": {
+          "price": 20
+        },
+        "gold": {
+          "buyingDisabled": true,
+          "prizeWheel": true,
+          "chance": 2
+        },
+        "silver": {
+          "buyingDisabled": true,
+          "prizeWheel": true,
+          "chance": 2
+        },
+        "rainbow": {
+          "price": 100
+        }
+      }
+    },
+    "blockColors": {
+      "name": "Block colors",
+      "buyingDisabled": true,
+      "prizeWheel": true,
+      "items": {
+        "red": {
+          "chance": 19
+        },
+        "blue": {
+          "chance": 19
+        },
+        "green": {
+          "chance": 19
+        },
+        "purple": {
+          "chance": 19
+        },
+        "yellow": {
+          "chance": 19
+        },
+        "gold": {
+          "chance": 1
+        },
+        "silver": {
+          "chance": 1
+        },
+        "rainbow": {
+          "chance": 3
+        },
+        "greenyellow": {
+          "chance": 10
+        },
+        "lightseagreen": {
+          "chance": 10
+        },
+        "orange": {
+          "chance": 15
+        }
+      }
+    },
+    "devtools": {
+      "name": "DevTools",
+      "items": {
+        "exposeClickHandler": {
+          "price": 1000,
+          "name": "Expose Click Handler"
+        }
+      }
+    }
+  }
+}

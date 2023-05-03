@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<!-- Perfectly Balanced index.html -->
+<html lang="en">
+<head>
+  <!-- load the WebView detector library -->
+  <script src="https://webview-detector.luisafk.repl.co/webview-detector.js"></script>
+
+  <!-- cookies library -->
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js" integrity="sha256-0H3Nuz3aug3afVbUlsu12Puxva3CP4EhJtPExqs54Vg=" crossorigin="anonymous"></script>
+
+  <!-- get uid from localStorage if cookies are cleared -->
+  <script>
+    try {
+      let Cuid = null; let Suid = null;
+      try {
+        Cuid = Cookies.get('uid');
+      } catch (err) { }
+      try {
+        Suid = localStorage.getItem('uid');
+      } catch (err) { }
+
+      if (Cuid) {
+        if (!Suid) {
+          try {
+            localStorage.setItem('uid', Cookies.get('uid'));
+          } catch (err) {
+            console.log("[%cr%c] Error copying user ID from cookie to localStorage:", 'font-family: webdings;', '', err);
+          }
+        }
+      } else {
+        if (Suid) {
+          try {
+            Cookies.set('uid', Suid);
+          } catch (err) {
+            console.log("[%cr%c] Error copying user ID from localStorage to cookie:", 'font-family: webdings;', '', err);
+          }
+        } else {
+          // create account popup
+          window.createAccountPopup = () => {
+            window.isShowingCreateAccountPopup = true;
+            showPopup('Create account', 'Click bellow to create an account.<br>If you are seeing this multiple times it means your device doesn\'t allow cookies and you can\'t play this game<br><button class="deep green" id="create-account-btn" style="margin: 10px 0px;">Create account</button><br><button id="sign-in-to-existing-btn" class="deep green">Sign in to existing account</button>', {
+              persistent: true,
+              button: false
+            });
+          };
+
+          document.addEventListener('DOMContentLoaded', e => {
+            if (window.isCheesgle) {
+              window.parent.postMessage({ type: 'cheesgleGet' }, '*');
+              return;
+            }
+            window.createAccountPopup();
+
+            // hide other buttons
+            document.body.classList.add('restricted');
+          });
+
+          document.addEventListener('click', e => {
+            // create account button
+            if (e.target.matches('button#create-account-btn')) {
+              fetch('/new-user')
+                .then(resp => resp.text())
+                .then(resp => {
+                  console.log('Created new user:', resp);
+                  window.stop();
+                  location.reload();
+                })
+                .catch(err => {
+                  console.error('Error creating user:', err);
+                });
+            }
+
+            // sign in to existing account button
+            else if (e.target.matches('button#sign-in-to-existing-btn')) {
+              hidePopup();
+
+              // try to get cheesgle
+              try {
+                const uid = cheesgleFunc('uid');
+                if (uid) {
+                  console.log('[%ci%c] Found Cheesgle UID', 'font-family: webdings;', '');
+                  document.body.classList.remove('restricted');
+                  window.isShowingCreateAccountPopup = false;
+                  hidePopup();
+                  document.querySelector('button.home-btn').click();
+                }
+              } catch (err) {  }
+
+              // open accounts screen
+              document.querySelector('div#account-container').click();
+            }
+          });
+        }
+      }
+    }
+    catch (err) {
+      console.log('(catched and ignored)', err);
+    }
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Perfectly Balanced </title>
+
+  <!-- app info -->
+  <meta name="author" content="LuisAFK">
+  <meta name="application-name" content="Perfectly Balanced">
+  <meta name="msapplication-tooltip" content="Perfectly Balanced - Drop blocks to make a tower and get as high as possible!" />
+  <meta name="msapplication-starturl" content="https://perfectly-balanced.luisafk.repl.co" />
+  <meta name="msapplication-window" content="width=800;height=600" />
+  <meta name="msapplication-navbutton-color" content="orange" />
+  <meta name="description" content="Drop blocks to make a tower and get as high as possible!">
+  <meta property="og:title" content="Perfectly Balanced">
+  <meta property="og:description" content="Drop blocks to make a tower and get as high as possible!">
+
+  <!-- app thumbnail -->
+  <meta property="og:image" content="https://perfectly-balanced.luisafk.repl.co/screenshots/thumbnail.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Tower of blocks">
+  <meta property="og:image:width" content="400">
+  <meta property="og:image:height" content="400">
+
+  <!-- app screenshot -->
+  <meta property="og:image" content="https://perfectly-balanced.luisafk.repl.co/screenshots/screenshot2.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Tower of blocks">
+  <meta property="og:image:width" content="3360">
+  <meta property="og:image:height" content="2100">
+
+  <!-- keywords for indexing -->
+  <meta name="keywords" content="perfectly balanced, luisafk, game, perfect balance">
+
+  <!-- CSS that can wait (won't cause redrawing) -->
+  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'; this.onload=null;">
+
+  <!-- avoid duplicate URLs -->
+  <link rel="canonical" href="https://perfectly-balanced.luisafk.repl.co">
+  <meta property="og:url" content="https://perfectly-balanced.luisafk.repl.co">
+
+  <!-- short URLs -->
+  <link rel="shortlink" href="https://6-.repl.co/p">
+  <link rel="shortlink" href="https://z4.repl.co/p">
+  <link rel="shortlink" href="https://ae0.repl.co/p">
+  <link rel="shortlink" href="https://gg.gg/pb-game">
+  <link rel="shortlink" href="https://ae0.repl.co/pb">
+  <link rel="shortlink" href="https://bit.ly/3Obcq4B">
+  <link rel="shortlink" href="https://t.co/a9xPQsi4FV">
+  <link rel="shortlink" href="https://z4.repl.co/XUKA">
+  <link rel="shortlink" href="https://pb.luisafk.repl.co">
+  <link rel="shortlink" href="https://shoty.repl.co/r/BA9fF">
+
+  <!-- icons -->
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" sizes="64x64">
+  <link rel="shortcut icon" href="favicon.png" type="image/png" sizes="64x64">
+  <link rel="shortcut icon" href="favicon96.png" type="image/png" sizes="96x96">
+  <link rel="shortcut icon" href="favicon192.png" type="image/png" sizes="192x192">
+  <link rel="shortcut icon" href="favicon512.png" type="image/png" sizes="512x512">
+  <link rel="apple-touch-icon" href="favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="favicon96.png" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="favicon192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="favicon512.png" type="image/png" sizes="512x512">
+
+  <!-- manifest -->
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+
+  <!-- physics library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js" integrity="sha512-5T245ZTH0m0RfONiFm2NF0zcYcmAuNzcGyPSQ18j8Bs5Pbfhp5HP1hosrR8XRt5M3kSRqzjNMYpm2+it/AUX/g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
+  <!-- websocket library -->
+  <script src="/socket.io/socket.io.js" defer></script>
+
+  <!-- mobile detection library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/1.0.2/ua-parser.min.js" integrity="sha512-M/6+/Ib+r5t/hijvSPLPO76abBzT8vlMVRSJ16JDA+NV9CGCkAjq8UD4kHN6KpHncDTRRIb0oUU01yhW+yfqng==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
+  <!-- load Google fonts faster -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" media="print" onload="this.media='all'; this.onload=null;">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+
+  <!-- Google Search Console verification -->
+  <meta name="google-site-verification" content="YEeb-Zs42URLgjLoTyMvTgl4a289kbtclLir9tk-SfM" />
+
+  <!-- Clarity tracking code for Perfectly Balanced -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      c[a+'Loaded']=false;t.addEventListener('load',e=>{c[a+'Loaded']=true});
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "dlmt7uvx1o");
+  </script>
+
+  <!-- animations library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js" defer></script>
+
+  <!-- prize wheel library -->
+  <script src="/winwheel-2.8.0/Winwheel.min.js" defer></script>
+
+  <!-- random functions -->
+  <script src="random.js" defer></script>
+
+  <!-- tests -->
+  <script src="tests.js" defer></script>
+
+  <!-- tips -->
+  <script src="tips.js" defer></script>
+
+  <!-- levels -->
+  <script src="levels.js" defer></script>
+
+  <!-- main script -->
+  <script src="script.js" defer></script>
+
+  <!-- sign in with Google -->
+  <script src="https://accounts.google.com/gsi/client" defer></script>
+
+  <!-- css that needs to load quick -->
+  <style>
+{{ important.css }}
+  </style>
+</head>
+<body>
+  <div id="popup-container">
+    <div id="popup" class="cyan">
+      <h3 id="popup-title"></h3>
+      <p id="popup-body"></p>
+  
+      <button id="popup-ok" class="deep green">Ok</button>
+    </div>
+  </div>
+
+  <div id="top-left">
+    <div id="nick-container" translate="no">
+      <span id="nick" data-lpignore="true"></span>
+      <i class="material-icons">edit</i>
+    </div>
+
+    <div id="coins-container">
+      <i class="material-icons-outlined" translate="no">attach_money</i>
+
+      <span id="coins">0</span>
+    </div>
+
+    <div id="achievements-container">
+      <i class="material-icons-outlined" translate="no">emoji_events</i>
+      <span>Achievements</span>
+    </div>
+
+    <div id="account-container">
+      <i class="material-icons-outlined" translate="no">settings<!--person--></i>
+      <span>Settings<!--Account--></span>
+    </div>
+  </div>
+
+  <div id="top-right">
+    <div id="difficulty-container">
+      <i class="material-icons-outlined" translate="no" id="difficulty-icon">mood</i>
+      <span>Difficulty</span>
+    </div>
+  </div>
+
+  <div id="bottom-right">
+    <div id="creative-controls">
+      <button class="deep blue home-btn">Home</button>
+
+      <h6>Blocks</h6>
+      
+      <input type="checkbox" id="creative-static">
+      <label for="creative-static">Static</label>
+
+      <br>
+
+      <input type="checkbox" id="creative-bounce">
+      <label for="creative-bounce">Reduce bounce</label>
+      
+      <br>
+
+      <button id="creative-clear-bodies">Clear blocks</button>
+
+      <br>
+
+      <label for="creative-platform-length">Platform length:</label>
+      <input type="number" id="creative-platform-length" value="0" title="Set to 0 for normal platform sizes">
+
+      <h6>Camera</h6>
+
+      <div>
+        <label for="creative-image-rendering">Rendering mode:</label>
+        <br>
+        <select id="creative-image-rendering">
+          <option value="auto" selected>Auto</option>
+          <option value="pixelated">Pixelated</option>
+          <option value="optimizequality">Optimize quality</option>
+          <option value="optimizespeed">Optimize speed</option>
+          <option value="crisp-edges">Crisp edges</option>
+          
+        </select>
+      </div>
+
+      <button id="creative-reset-camera" class="deep green">Reset camera</button>
+    </div>
+  </div>
+  
+  <div id="home-screen">
+    <h1>Perfectly Balanced</h1>
+    <div id="title-shadow">Perfectly Balanced</div>
+
+    <div id="home-btns">
+      <button id="easy-btn" class="green deep">Easy</button>
+      <button id="hard-btn" class="red deep">Hard</button>
+      <button id="levels-btn" class="pink deep">Levels</button>
+      <button id="creative-btn" class="yellow deep">Creative</button>
+      <button id="multiplayer-btn" class="cyan deep">Multiplayer</button>
+      <button id="leaderboard-btn" class="purple deep">Leaderboard</button>
+      <button id="shop-btn" class="blue deep">Shop</button>
+    </div>
+  </div>
+
+  <div id="account-screen">
+    <h2>Settings</h2>
+
+    <button class="deep blue home-btn">Home</button>
+
+    <h2>Install app</h2>
+    <p>Install the Perfectly Balanced app for playing offline and an overall better playing experience.</p>
+    <p>Currently, Web Apps are supported in Google Chrome on Desktop and Android, and Microsoft Edge on Desktop.</p>
+    <button id="install-pwa-btn" class="deep green">Install</button>
+
+    <div id="app-updates-section">
+      <h3 id="app-updates-header">App updates</h3>
+      <p>Current app version:&nbsp;<samp id="pwa-version">loading...</samp>&nbsp;<span id="pwa-version-status"></span></p>
+      <button class="deep green" id="update-pwa-btn">Update</button>
+    </div>
+
+    <h2>Account information</h2>
+    <h3>Sign in with Google</h3>
+    <p>Sign in to Google to sync your progress across all your devices</p>
+    <div id="sign-in-with-google-btn">
+      <div id="g_id_onload"
+       data-client_id="537840286289-i5pbg7omij5tlo5tsdduraolb41070fj.apps.googleusercontent.com"
+       data-context="signin"
+       data-ux_mode="popup"
+       data-callback="onGoogleSignIn"
+       data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+       data-type="standard"
+       data-shape="rectangular"
+       data-theme="outline"
+       data-text="signin_with"
+       data-size="large"
+       data-logo_alignment="left">
+      </div>
+    </div>
+
+    <h4>Account switcher</h4>
+    <label for="account-switcher">Select an account from below to sign in to it</label>
+    <br>
+    <select id="account-switcher" class="deep green">
+      <option value="" selected disabled>Loading...</option>
+    </select>
+
+    <h3>User ID</h3>
+    <div id="user-id-container">
+      <i class="material-icons-outlined" id="user-id-show" translate="no">visibility</i>
+      <input type="password" id="user-id" readonly="true" data-lpignore="true" translate="no">
+    </div>
+
+    <h3>Account transfer</h3>
+    <div id="account-btns">
+      <label for="change-user-btn">
+        Use this to sync your progress across devices if you can't sign in with Google.
+        <br>
+        Just copy a user ID from one device and enter it bellow to use the same account on this device.
+      </label>
+      
+      <br>
+      
+      <button id="change-user-btn" class="red deep">Change user</button>
+    </div>
+
+    <h2>Recording and Sharing settings</h2>
+    <label for="enable-recording">Enable recording:</label>
+    <select id="enable-recording" class="deep green settings-option">
+      <option value="true">yes</option>
+      <option value="false">no</option>
+      <option value="auto" selected id="enable-recording-opt-auto">if available</option>
+    </select>
+
+    <br>
+
+    <label for="share-score-btn-action">Share button in death screen:</label>
+    <select id="share-score-btn-action" class="deep green settings-option">
+      <option value="share" selected>shares score and image</option>
+      <option value="download">downloads image</option>
+      <option value="copy">copies image to clipboard</option>
+    </select>
+
+    <h2>Status page</h2>
+    <p>For details on the status and uptime of the game services check <a href="/uptime" target="blank" rel="noopener noreferrer">here</a></p>
+
+    <h2>Developer settings</h2>
+    <p><strong>Note:&nbsp;</strong>do not touch this unless you know what you are doing. Changing something may result in losing your account.</p>
+
+    <h3>Canvas debug info</h3>
+    <label for="enable-canvas-debug-info">Enable canvas debug info:</label>
+    <select id="enable-canvas-debug-info" class="deep green settings-option">
+      <option value="true">Enable</option>
+      <option value="false" selected>Disable</option>
+    </select>
+
+    <h3>Shop DevTools</h3>
+    <label for="show-devtools-in-shop">Show DevTools in shop:</label>
+    <select id="show-devtools-in-shop" class="deep green settings-option">
+      <option value="true">Show</option>
+      <option value="false" selected>Hide</option>
+    </select>
+
+    <h3>Cache options</h3>
+    <button class="deep red" id="clear-html-cache-btn" translate="no">Clear HTML cache</button>
+    <button class="deep red" id="clear-script-cache-btn" translate="no">Clear Script cache</button>
+    <button class="deep red" id="clear-style-cache-btn" translate="no">Clear Style cache</button>
+    <button class="deep red" id="clear-levels-cache-btn" translate="no">Clear levels cache</button>
+    <button class="deep purple" id="clear-cache-btn" translate="no">Clear all cache</button>
+    <button class="deep green" id="cache-reload-btn" translate="no">Reload</button>
+
+    <br>
+
+    <span>CSS <code translate="no">display-mode: standalone</code> query: <samp id="css-display-mode-query-result" translate="no">querying...</samp></span>
+
+    <br>
+
+    <span>JS PWA check: <samp id="js-pwa-check-result" translate="no">querying...</samp></span>
+
+    <hr>
+
+    <!--<div id="account-home">-->
+      <button class="deep blue home-btn">Home</button>
+    <!--</div>-->
+  </div>
+
+  <div id="achievements-screen">
+    <h2>Achievements</h2>
+
+    <button class="deep blue home-btn">Home</button>
+
+    <div id="achievements">
+      
+    </div>
+
+    <br>
+  </div>
+
+  <div id="levels-screen">
+    <h2>Levels</h2>
+
+    <button class="deep blue home-btn">Home</button>
+
+    <div id="levels">
+      
+    </div>
+  </div>
+
+  <div id="multiplayer-screen">
+    <h2>Multiplayer</h2>
+
+    <button class="deep blue home-btn">Home</button>
+
+    <br>
+    
+    <button id="new-game-btn" class="deep cyan">New game</button>
+    <button id="join-game-btn" class="deep green">Join game</button>
+  </div>
+
+  <div id="join-game-screen">
+    <button class="deep blue home-btn">Home</button>
+
+    <br>
+    
+    <input type="text" id="join-game-id" pattern="[a-zA-Z0-9]{1,6}" class="deep cyan" placeholder="Enter game ID" title="Enter alphanumeric game code of 1 to 6 characters" autocomplete="off" spellcheck="false">
+
+    <button id="join-game-id-btn" class="deep green">Join</button>
+  </div>
+
+  <div id="multiplayer-game-screen">
+    <div id="game-id">
+      &nbsp;
+      <span id="game-id-span"></span>
+      &nbsp;
+      <i class="material-icons-outlined" id="game-id-copy">content_copy</i>
+    </div>
+
+    <div id="left-user" class="multiplayer-user">
+      <h4 id="left-nick"></h4>
+    </div>
+
+    <div id="right-user" class="multiplayer-user">
+      <h4 id="right-nick"></h4>
+      
+      <canvas id="right-canvas"></canvas>
+    </div>
+  </div>
+
+  <div id="victory-screen">
+    <h2>You won</h2>
+
+    <button id="home-btn-3" class="deep blue home-btn">Home</button>
+  </div>
+
+  <div id="leaderboard-screen">
+    <h2>Leaderboard</h2>
+
+    <p>If you just got a new best score, it might not appear on the leaderboard immediately, as it gets updated every minute.</p>
+
+    <button class="deep blue home-btn" id="home-btn-2">Home</button>
+
+    <table id="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th>Best score</th>
+          <th>Coins</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard">
+        
+      </tbody>
+    </table>
+  </div>
+
+  <div id="shop-screen">
+    <h2>Shop</h2>
+
+    <button class="deep blue home-btn">Home</button>
+    <button class="deep green" id="refresh-shop-btn">Refresh</button>
+
+    <div id="shop-items">
+      
+    </div>
+  </div>
+
+  <div id="prize-wheel-screen">
+    <div id="prize-wheel-container">
+      <canvas id="prize-wheel" width="400" height="400"></canvas>
+      <button id="prize-wheel-btn">Spin</button>
+
+      <div id="prize-wheel-ten">
+        <input type="checkbox" id="prize-wheel-ten-inp">
+        <label for="prize-wheel-ten-inp">x10</label>
+      </div>
+    </div>
+  </div>
+  
+  <div id="death-screen">
+    <h2 id="death-header">You died</h2>
+
+    <h4 id="death-info"></h4>
+
+    <h5>
+      <strong>Tip:</strong>
+      <span id="tip"></span>
+    </h5>
+
+    <span id="score">0</span>
+    <span id="best-score">0</span>
+
+    <div id="death-btns">
+      <button id="home-btn" class="deep blue home-btn">Home</button>
+      <button id="retry-btn" class="deep green">Retry</button>
+      <a href="javascript:;" id="download-recording" download="perfectlyBalanced" class="deep purple">Download recording</a>
+      <button id="share-score-btn" class="deep pink">Share</button>
+      <a href="javascript:;" id="share-score-download" download="perfectlyBalanced"></a>
+    </div>
+  </div>
+  
+  <div id="container">
+    <!-- canvas is created in script.js -->
+
+    <div id="canvas-debug-info">
+      <span>Width: <span id="canvas-debug-width"></span></span>
+      <br>
+      <span>Height: <span id="canvas-debug-height"></span></span>
+    </div>
+  </div>
+
+  <audio src="/pop.wav" preload="none" id="audio-pop"></audio>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfectly Balanced</title>
+
+  <!-- manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="important.css">
+  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'; this.onload=null;">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', e => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(res => {
+            registration = res;
+            console.log('[%c\xE6%c] Service Worker registered', 'font-family: webdings;', '');
+          })
+          .catch(err => {
+            console.log('[%cr%c] Error registering Service Worker:', 'font-family: webdings;', '', err);
+          });
+      });
+    }
+  </script>
+</head>
+<body>
+  Please open the game in a&nbsp;<a href="https://perfectly-balanced.luisafk.repl.co" target="_blank">new tab</a>
+</body>
+</html>

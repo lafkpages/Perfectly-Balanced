@@ -1,0 +1,117 @@
+{
+  "name": "Perfectly Balanced",
+  "short_name": "Perfectly Balanced",
+  "description": "Drop blocks to make a tower and get as high as possible!",
+  "dir": "ltr",
+  "lang": "en",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/favicon96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/favicon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/favicon512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "background_color": "white",
+  "theme_color": "white",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1.jpg",
+      "sizes": "3360x2100",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Perfectly Balanced home screen"
+    },
+    {
+      "src": "/screenshots/screenshot2.jpg",
+      "sizes": "3360x2100",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Perfectly Balanced easy mode"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+pb",
+      "url": "https://perfectly-balanced.luisafk.repl.co/#protocol=%s"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Easy mode",
+      "short_name": "Easy",
+      "url": "/#easyMode",
+      "description": "Start a game in easy mode",
+      "icons": [
+        {
+          "src": "/favicon96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Hard mode",
+      "short_name": "Hard",
+      "url": "/#hardMode",
+      "description": "Start a game in hard mode",
+      "icons": [
+        {
+          "src": "/favicon96_hard.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Join Multiplayer game",
+      "short_name": "Join Multiplayer",
+      "url": "/#gameId=",
+      "description": "Joins a multiplayer game by game ID",
+      "icons": [
+        {
+          "src": "/favicon96_multiplayer.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "url_handlers": [
+    {
+      "origin": "https://perfectly-balanced.luisafk.repl.co"
+    },
+    {
+      "origin": "https://pb.luisafk.repl.co"
+    }
+  ]
+}

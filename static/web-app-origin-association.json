@@ -1,0 +1,11 @@
+{
+  "web_apps": [
+    {
+      "manifest": "https://perfectly-balanced.luisafk.repl.co/manifest.json",
+      "details": {
+        "paths": ["/*"],
+        "exclude_paths": ["/internal/*"]
+      }
+    }
+  ]
+}

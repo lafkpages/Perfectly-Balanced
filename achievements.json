@@ -1,0 +1,104 @@
+{
+  "achievements": {
+    "got_some_skill": {
+      "name": "Got some skill",
+      "description": "Get a score of 50 points",
+      "check": "vars.bestScore >= 50",
+      "reward": 100,
+      "icon": "hotel_class",
+      "progressMax": 50,
+      "progressCheck": "vars.bestScore"
+    },
+    "pro_gamer": {
+      "name": "Pro gamer",
+      "description": "Get a score of 100 points",
+      "check": "vars.bestScore >= 100",
+      "reward": 100,
+      "icon": "sports_esports",
+      "progressMax": 100,
+      "progressCheck": "vars.bestScore"
+    },
+    "epic_gamer": {
+      "name": "Epic gamer",
+      "description": "Get a score of 200 points",
+      "check": "vars.bestScore >= 200",
+      "reward": 100,
+      "icon": "auto_awesome",
+      "progressMax": 200,
+      "progressCheck": "vars.bestScore"
+    },
+    "jeff_bezos": {
+      "name": "John Cazos",
+      "description": "Reach 1000 coins",
+      "check": "vars.coins >= 1000",
+      "reward": 500,
+      "icon": "card_giftcard",
+      "progressMax": 10,
+      "progressCheck": "vars.coins / 100"
+    },
+    "usernamed": {
+      "name": "Usernamed",
+      "description": "Change your username",
+      "check": "vars.nickChanges >= 1",
+      "reward": 20,
+      "icon": "edit",
+      "iconType": "material-icons",
+      "progressMax": 1,
+      "progressCheck": "vars.nickChanges"
+    },
+    "the_worst": {
+      "name": "The Worst",
+      "description": "Get a score of 1 or less",
+      "check": "vars.worstScore <= 1",
+      "reward": 25,
+      "icon": "thumb_down",
+      "progressMax": 1,
+      "progressCheck": "+(vars.worstScore <= 1)"
+    },
+    "saved": {
+      "name": "Saved",
+      "description": "Save your progress by signing in to Google",
+      "check": "vars.goog && vars.goog.sub",
+      "reward": 250,
+      "icon": "cloud_upload",
+      "progressMax": 1,
+      "progressCheck": "+!!(vars.goog && vars.goog.sub)"
+    },
+    "poor": {
+      "name": "Poor",
+      "description": "Finish a game with 0 coins or less",
+      "check": "vars.coins <= 0",
+      "reward": 10,
+      "icon": "money_off",
+      "progressMax": 1,
+      "progressCheck": "+(vars.coins <= 0)"
+    },
+    "colorful": {
+      "name": "Colorful",
+      "description": "Buy a block color",
+      "check": "(vars.items?.filter(item => item.startsWith('blockColors.')).length || 0) > 0",
+      "reward": 100,
+      "icon": "palette",
+      "progressMax": 1,
+      "progressCheck": "(function () { if (!vars.items) return 0; let r = 0; for (const i of vars.items) { if (i[0] == 'b' && i[1] == 'l' && i[2] == 'o' && i[3] == 'c' && i[4] == 'k' && i[5] == 'C' && i[6] == 'o' && i[7] == 'l' && i[8] == 'o' && i[9] == 'r' && i[10] == 's' && i[11] == '.') r++; } return r; })()"
+    },
+    "pwa_installed": {
+      "name": "Downloaded",
+      "description": "Install the Perfectly Balanced app (in the Settings tab)",
+      "check": "+(vars.pwaInstalled)",
+      "reward": 500,
+      "icon": "system_update",
+      "progressMax": 1,
+      "progressCheck": "+(vars.pwaInstalled || 0)"
+    },
+    "5levels": {
+      "name": "Leveled",
+      "description": "Beat 5 levels",
+      "check": "vars.level >= 5",
+      "reward": 100,
+      "icon": "looks_5",
+      "progressMax": 5,
+      "progressCheck": "vars.level"
+    }
+  }
+}
