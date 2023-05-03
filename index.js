@@ -1531,6 +1531,7 @@ io.on('connection', (socket) => {
 // start the server
 server.listen(3000, () => {
   // print database viewer link for easy access
+  // note: link unclickable because of safe-logging-replit
   console.log('Server started, database URL:');
   console.log(
     `https://replit-database-viewer.luisafk.repl.co/?url=${Buffer.from(
