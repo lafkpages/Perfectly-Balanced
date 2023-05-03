@@ -8,10 +8,7 @@
   "start_url": "/",
   "scope": "/",
   "prefer_related_applications": false,
-  "categories": [
-    "games",
-    "entertainment"
-  ],
+  "categories": ["games", "entertainment"],
   "icons": [
     {
       "src": "/favicon.png",

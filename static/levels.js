@@ -11,9 +11,9 @@ window.levels = {
         Matter.Bodies.rectangle(w / 2, h - 10, w / 2, 10, {
           isStatic: true,
           label: 'level ground',
-          restitution: 0
-        })
-      ]
+          restitution: 0,
+        }),
+      ],
     },
     {
       victoryY: -600,
@@ -22,19 +22,19 @@ window.levels = {
         Matter.Bodies.rectangle(w / 4, h - 10, w / 2, 10, {
           isStatic: true,
           label: 'level ground',
-          restitution: 0
+          restitution: 0,
         }),
         Matter.Bodies.rectangle((w / 4) * 3, 0, w / 3, 10, {
           isStatic: true,
           label: 'level ground',
-          restitution: 0
+          restitution: 0,
         }),
         Matter.Bodies.rectangle(w / 4, -280, w / 2, 10, {
           isStatic: true,
           label: 'level block',
-          restitution: 0
-        })
-      ]
+          restitution: 0,
+        }),
+      ],
     },
     {
       victoryY: -400,
@@ -44,24 +44,24 @@ window.levels = {
         Matter.Bodies.rectangle(w / 6, h - 10, w / 4, 10, {
           isStatic: true,
           label: 'level ground',
-          restitution: 0
+          restitution: 0,
         }),
         Matter.Bodies.rectangle((w / 6) * 5, h - 10, w / 4, 10, {
           isStatic: true,
           label: 'level ground',
-          restitution: 0
+          restitution: 0,
         }),
         ...[
           Matter.Bodies.trapezoid(060, 90, 30, 60, 0.5),
           Matter.Bodies.trapezoid(080, 90, 30, 60, 0.5),
           Matter.Bodies.trapezoid(320, 90, 30, 60, 0.5),
           Matter.Bodies.trapezoid(350, 90, 30, 60, 0.5),
-        ].map(body => {
+        ].map((body) => {
           body.label = 'level block';
           body.restitution = 0;
           return body;
-        })
-      ]
+        }),
+      ],
     },
     {
       victoryY: -600,
@@ -74,17 +74,17 @@ window.levels = {
           _move: {
             x: {
               limits: [-20, w * 2],
-              speed: 0.03
-            }
-          }
-        })
-      ]
+              speed: 0.03,
+            },
+          },
+        }),
+      ],
     },
     {
       victoryY: 100,
       difficulty: 'hard',
       initStep: 3,
-      getPlatformSize: () => 80
+      getPlatformSize: () => 80,
     },
     {
       victoryY: 10,
@@ -99,11 +99,11 @@ window.levels = {
           _move: {
             y: {
               limits: [300, 5000],
-              speed: 0.05
-            }
-          }
-        })
-      ]
+              speed: 0.05,
+            },
+          },
+        }),
+      ],
     },
     {
       victoryY: 100,
@@ -117,9 +117,9 @@ window.levels = {
           _move: {
             x: {
               limits: [-20, w / 4],
-              speed: 1
-            }
-          }
+              speed: 1,
+            },
+          },
         }),
         Matter.Bodies.rectangle(w + 20, h / 2, 100, h - 20, {
           isStatic: true,
@@ -129,11 +129,11 @@ window.levels = {
           _move: {
             x: {
               limits: [3 * (w / 4), w + 20],
-              speed: 1
-            }
-          }
-        })
-      ]
+              speed: 1,
+            },
+          },
+        }),
+      ],
     },
     {
       victoryY: -200,
@@ -144,15 +144,15 @@ window.levels = {
           label: 'level ground',
           isStatic: true,
           restitution: 0,
-          friction: 1
+          friction: 1,
         }),
         Matter.Bodies.rectangle(w / 4, -210, w / 2, 10, {
           label: 'level ground',
           isStatic: true,
           restitution: 0,
-          friction: 1
-        })
-      ]
+          friction: 1,
+        }),
+      ],
     },
     {
       victoryY: -100,
@@ -167,11 +167,11 @@ window.levels = {
           _move: {
             x: {
               limits: [w / 4, 3 * (w / 4)],
-              speed: 1
-            }
-          }
-        })
-      ]
-    }
-  ]
+              speed: 1,
+            },
+          },
+        }),
+      ],
+    },
+  ],
 };

@@ -1,128 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfectly Balanced - Clear cache</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfectly Balanced - Clear cache</title>
 
-  <!-- app info -->
-  <meta name="author" content="LuisAFK">
-  <meta name="application-name" content="Perfectly Balanced">
-  <meta name="description" content="Drop blocks to make a tower and get as high as possible!">
-  <meta property="og:title" content="Perfectly Balanced">
-  <meta property="og:description" content="Drop blocks to make a tower and get as high as possible!">
+    <!-- app info -->
+    <meta name="author" content="LuisAFK" />
+    <meta name="application-name" content="Perfectly Balanced" />
+    <meta
+      name="description"
+      content="Drop blocks to make a tower and get as high as possible!"
+    />
+    <meta property="og:title" content="Perfectly Balanced" />
+    <meta
+      property="og:description"
+      content="Drop blocks to make a tower and get as high as possible!"
+    />
 
-  <!-- app thumbnail -->
-  <meta property="og:image" content="/screenshots/thumbnail.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:alt" content="Tower of blocks">
-  <meta property="og:image:width" content="400">
-  <meta property="og:image:height" content="400">
+    <!-- app thumbnail -->
+    <meta property="og:image" content="/screenshots/thumbnail.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Tower of blocks" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
 
-  <!-- app screenshot -->
-  <meta property="og:image" content="/screenshots/screenshot2.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:alt" content="Tower of blocks">
-  <meta property="og:image:width" content="3360">
-  <meta property="og:image:height" content="2100">
+    <!-- app screenshot -->
+    <meta property="og:image" content="/screenshots/screenshot2.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Tower of blocks" />
+    <meta property="og:image:width" content="3360" />
+    <meta property="og:image:height" content="2100" />
 
-  <!-- avoid duplicate URLs -->
-  <link rel="canonical" href="https://perfectly-balanced.luisafk.repl.co/clearCache.html">
-  <meta property="og:url" content="https://perfectly-balanced.luisafk.repl.co/clearCache.html">
+    <!-- avoid duplicate URLs -->
+    <link
+      rel="canonical"
+      href="https://perfectly-balanced.luisafk.repl.co/clearCache.html"
+    />
+    <meta
+      property="og:url"
+      content="https://perfectly-balanced.luisafk.repl.co/clearCache.html"
+    />
 
-  <!-- manifest -->
-  <link rel="manifest" href="manifest.json">
+    <!-- manifest -->
+    <link rel="manifest" href="manifest.json" />
 
-  <!-- styles -->
-  <link rel="stylesheet" href="important.css">
-  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'; this.onload=null;">
+    <!-- styles -->
+    <link rel="stylesheet" href="important.css" />
+    <link
+      rel="stylesheet"
+      href="style.css"
+      media="print"
+      onload="this.media='all'; this.onload=null;"
+    />
 
-  <!-- load Google fonts faster -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- load Google fonts faster -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'; this.onload=null;"
+    />
 
-  <script>
-    async function getServiceWorker() {
-      return navigator.serviceWorker.controller || (await navigator.serviceWorker.ready).active;
-    }
+    <script>
+      async function getServiceWorker() {
+        return (
+          navigator.serviceWorker.controller ||
+          (await navigator.serviceWorker.ready).active
+        );
+      }
 
-    let registration = null;
+      let registration = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const btn1 = document.querySelector('button#clear-cache');
-      const btn2 = document.querySelector('button#unregister');
-  
-      btn1.addEventListener('click', () => {
-        getServiceWorker().then(sw => {
-          console.log('[%ci%c] Posting message', 'font-family: webdings', '');
-          sw.postMessage({
-            type: 'CLEAR_CACHE'
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn1 = document.querySelector('button#clear-cache');
+        const btn2 = document.querySelector('button#unregister');
+
+        btn1.addEventListener('click', () => {
+          getServiceWorker().then((sw) => {
+            console.log('[%ci%c] Posting message', 'font-family: webdings', '');
+            sw.postMessage({
+              type: 'CLEAR_CACHE',
+            });
           });
+        });
+
+        btn2.addEventListener('click', () => {
+          if (registration)
+            registration.unregister().then((res) => {
+              console.log('Unregistration result:', res);
+            });
         });
       });
 
-      btn2.addEventListener('click', () => {
-        if (registration)
-          registration.unregister().then(res => {
-            console.log('Unregistration result:', res);
-          });
-      });
-    });
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', (e) => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((res) => {
+              registration = res;
+              console.log(
+                '[%c\xE6%c] Service Worker registered',
+                'font-family: webdings;',
+                ''
+              );
+            })
+            .catch((err) => {
+              console.log(
+                '[%cr%c] Error registering Service Worker:',
+                'font-family: webdings;',
+                '',
+                err
+              );
+            });
+        });
+      }
+    </script>
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', e => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(res => {
-            registration = res;
-            console.log('[%c\xE6%c] Service Worker registered', 'font-family: webdings;', '');
-          })
-          .catch(err => {
-            console.log('[%cr%c] Error registering Service Worker:', 'font-family: webdings;', '', err);
-          });
-      });
-    }
-  </script>
+    <style>
+      body {
+        flex-direction: column;
+        text-align: center;
+      }
 
-  <style>
-    body
-    {
-      flex-direction: column;
-      text-align: center;
-    }
+      #title {
+        margin-block-end: 0px;
+      }
 
-    #title
-    {
-      margin-block-end: 0px;
-    }
+      * {
+        color: black;
+      }
 
-    *
-    {
-      color: black;
-    }
+      div#buttons > .deep {
+        display: inline-block;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="title">Game not working?</h2>
+    <p>
+      Try clearing the game cache with the button bellow (only do this if you
+      are connected to the internet) and then unregistering the game Service
+      Worker.
+    </p>
 
-    div#buttons > .deep
-    {
-      display: inline-block;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h2 id="title">Game not working?</h2>
-  <p>Try clearing the game cache with the button bellow (only do this if you are connected to the internet) and then unregistering the game Service Worker.</p>
+    <br />
 
-  <br>
-
-  <div id="buttons">
-    <a id="home" class="deep cyan" href="/">Home</a>
-    &nbsp;
-    <button id="clear-cache" class="deep cyan">Clear all cache</button>
-    &nbsp;
-    <button id="unregister" class="deep red">Unregister Service Worker</button>
-  </div>
-</body>
+    <div id="buttons">
+      <a id="home" class="deep cyan" href="/">Home</a>
+      &nbsp;
+      <button id="clear-cache" class="deep cyan">Clear all cache</button>
+      &nbsp;
+      <button id="unregister" class="deep red">
+        Unregister Service Worker
+      </button>
+    </div>
+  </body>
 </html>

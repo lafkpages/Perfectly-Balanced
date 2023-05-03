@@ -10,13 +10,11 @@ if (webviewDetector.isWebView()) {
   window.location.replace('/_replit.html');
 }
 
-
 // parsed URL for GET params
 const parsedUrl = new URL(location.href);
 const parsedHash = new URLSearchParams(location.hash.substr(1));
 let protocol = null;
 let parsedProtocol = new URLSearchParams('');
-
 
 function getPWADisplayMode() {
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
@@ -28,40 +26,54 @@ function getPWADisplayMode() {
   return 'browser';
 }
 
-
 // isolate variables from global namespace
 // to prevent cheating from the console
 (() => {
-
-
   // register error listeners
-  window.addEventListener('unhandledrejection', e => {
+  window.addEventListener('unhandledrejection', (e) => {
     try {
       runner.enabled = false;
     } catch (err) {
-      console.log('[%ci%c] Error stopping physics in unhandled rejection handler:', 'font-family: webdings;', '', err);
+      console.log(
+        '[%ci%c] Error stopping physics in unhandled rejection handler:',
+        'font-family: webdings;',
+        '',
+        err
+      );
     }
 
-    showPopup('Error', `There was an unhandled Promise rejection:<br><samp>${e.reason}</samp><br><button class="deep green error-reload-btn">Reload</button>`, {
-      button: null,
-      persistent: true
-    });
+    showPopup(
+      'Error',
+      `There was an unhandled Promise rejection:<br><samp>${e.reason}</samp><br><button class="deep green error-reload-btn">Reload</button>`,
+      {
+        button: null,
+        persistent: true,
+      }
+    );
   });
-  window.addEventListener('error', e => {
+  window.addEventListener('error', (e) => {
     try {
       runner.enabled = false;
     } catch (err) {
-      console.log('[%ci%c] Error stopping physics in error handler:', 'font-family: webdings;', '', err);
+      console.log(
+        '[%ci%c] Error stopping physics in error handler:',
+        'font-family: webdings;',
+        '',
+        err
+      );
     }
 
-    showPopup('Error', `There was an uncaught error:<br><samp>${e.type}: ${e.message}</samp><br><button class="deep green error-reload-btn">Reload</button>`, {
-      button: null,
-      persistent: true
-    });
+    showPopup(
+      'Error',
+      `There was an uncaught error:<br><samp>${e.type}: ${e.message}</samp><br><button class="deep green error-reload-btn">Reload</button>`,
+      {
+        button: null,
+        persistent: true,
+      }
+    );
   });
-  document.addEventListener('click', e => {
-    if (!e.target.matches('button.error-reload-btn'))
-      return;
+  document.addEventListener('click', (e) => {
+    if (!e.target.matches('button.error-reload-btn')) return;
 
     location.reload();
   });
@@ -71,19 +83,22 @@ function getPWADisplayMode() {
   let cheesgleData = {};
   let cheesgleIsClosing = false;
   if (parsedHash.has('cheesgle')) {
-    isCheesgle = true; document.documentElement.classList.add('cheesgle');
-    console.log("[%ci%c] Cheesgle Byte detected", 'font-family: webdings;', '');
+    isCheesgle = true;
+    document.documentElement.classList.add('cheesgle');
+    console.log('[%ci%c] Cheesgle Byte detected', 'font-family: webdings;', '');
     window.parent.postMessage({ type: 'cheesgleGet' }, '*');
     setTimeout(() => {
       if (cheesgle('uid')) {
         if (window.isShowingCreateAccountPopup) hidePopup();
-        getUserData2(); document.body.classList.remove('restricted');
+        getUserData2();
+        document.body.classList.remove('restricted');
       }
     }, 500);
-  } Object.defineProperty(window, 'isCheesgle', {
+  }
+  Object.defineProperty(window, 'isCheesgle', {
     get: () => isCheesgle,
-    set: v => isCheesgle = v,
-    enumerable: true
+    set: (v) => (isCheesgle = v),
+    enumerable: true,
   });
 
   // chrome theme color
@@ -98,33 +113,68 @@ function getPWADisplayMode() {
   // protocol handlers
   if (navigator.registerProtocolHandler) {
     try {
-      navigator.registerProtocolHandler('web+pb', 'https://perfectly-balanced.luisafk.repl.co/#protocol=%s', 'Perfectly Balanced');
+      navigator.registerProtocolHandler(
+        'web+pb',
+        'https://perfectly-balanced.luisafk.repl.co/#protocol=%s',
+        'Perfectly Balanced'
+      );
     } catch (err) {
-      console.log('[%cr%c] Error registering protocol handlers:', 'font-family: webdings;', '', err);
+      console.log(
+        '[%cr%c] Error registering protocol handlers:',
+        'font-family: webdings;',
+        '',
+        err
+      );
     }
-  }
-  else {
-    console.log('[%ci%c] Did not register protocol handler because protocol handlers are not supported', 'font-family: webdings;', '');
+  } else {
+    console.log(
+      '[%ci%c] Did not register protocol handler because protocol handlers are not supported',
+      'font-family: webdings;',
+      ''
+    );
   }
 
   // register service worker
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", e => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', (e) => {
       try {
         navigator.serviceWorker
-          .register("/sw.js")
-          .then(res => console.log("[%c\xE6%c] Service worker registered", 'font-family: webdings;', ''))
-          .catch(err => console.log("[%cr%c] Service worker not registered:", 'font-family: webdings;', '', err));
+          .register('/sw.js')
+          .then((res) =>
+            console.log(
+              '[%c\xE6%c] Service worker registered',
+              'font-family: webdings;',
+              ''
+            )
+          )
+          .catch((err) =>
+            console.log(
+              '[%cr%c] Service worker not registered:',
+              'font-family: webdings;',
+              '',
+              err
+            )
+          );
       } catch (err) {
-        console.log("[%cr%c] Service worker not registered:", 'font-family: webdings;', '', err);
+        console.log(
+          '[%cr%c] Service worker not registered:',
+          'font-family: webdings;',
+          '',
+          err
+        );
       }
     });
   }
 
   // install PWA prompts
   let installAppEvent = null;
-  window.addEventListener('beforeinstallprompt', e => {
-    console.log('[%ci%c] onBeforeInstallPrompt fired:', 'font-family: webdings;', '', e);
+  window.addEventListener('beforeinstallprompt', (e) => {
+    console.log(
+      '[%ci%c] onBeforeInstallPrompt fired:',
+      'font-family: webdings;',
+      '',
+      e
+    );
 
     e.preventDefault();
 
@@ -132,27 +182,38 @@ function getPWADisplayMode() {
   });
 
   // handle install button
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     if (!e.target.matches('button#install-pwa-btn')) return;
 
     if (installAppEvent) {
       hidePopup();
       installAppEvent.prompt();
 
-      installAppEvent.userChoice.then(choice => {
-        console.log('[%ci%c] User choice in PWA install prompt:', 'font-family: webdings;', '', choice.outcome);
+      installAppEvent.userChoice.then((choice) => {
+        console.log(
+          '[%ci%c] User choice in PWA install prompt:',
+          'font-family: webdings;',
+          '',
+          choice.outcome
+        );
 
         installAppEvent = null;
       });
-    }
-    else {
-      console.error('[%cr%c] Tried to install app but no onBeforeInstallPrompt was saved', 'font-family: webdings;', '');
-      showPopup('Error', 'There was an error installing the app. Please try again later');
+    } else {
+      console.error(
+        '[%cr%c] Tried to install app but no onBeforeInstallPrompt was saved',
+        'font-family: webdings;',
+        ''
+      );
+      showPopup(
+        'Error',
+        'There was an error installing the app. Please try again later'
+      );
     }
   });
 
   // handle PWA install event
-  window.addEventListener('appinstalled', e => {
+  window.addEventListener('appinstalled', (e) => {
     console.log('PWA was installed');
     installAppEvent = null;
 
@@ -161,20 +222,19 @@ function getPWADisplayMode() {
       method: 'POST',
       body: 'true',
       headers: {
-        'Content-Type': 'text/plain'
-      }
+        'Content-Type': 'text/plain',
+      },
     });
   });
 
   // handle online and offline events
-  window.addEventListener('online', e => {
+  window.addEventListener('online', (e) => {
     updateAccountSwitcher();
   });
 
-  window.addEventListener('offline', e => {
+  window.addEventListener('offline', (e) => {
     updateAccountSwitcher();
   });
-
 
   // save tests
   const tests = window.tests;
@@ -192,7 +252,6 @@ function getPWADisplayMode() {
     console.error('Error initializing UAParser:', err);
   }
 
-
   // HTML elements
   const popupContainer = document.querySelector('div#popup-container');
   const popupCont = document.querySelector('div#popup');
@@ -209,12 +268,16 @@ function getPWADisplayMode() {
   const achievementsBtn = document.querySelector('div#achievements-container');
   const topRight = document.querySelector('div#top-right');
   const difficultyIcon = document.querySelector('#difficulty-icon');
-  const difficultySpan = document.querySelector('div#difficulty-container span');
+  const difficultySpan = document.querySelector(
+    'div#difficulty-container span'
+  );
   const bottomRight = document.querySelector('div#bottom-right');
   const creativeControlsDiv = document.querySelector('div#creative-controls');
   const creativeControlStatic = document.querySelector('input#creative-static');
   const creativeControlBounce = document.querySelector('input#creative-bounce');
-  const creativeControlPlatformLength = document.querySelector('input#creative-platform-length');
+  const creativeControlPlatformLength = document.querySelector(
+    'input#creative-platform-length'
+  );
   const easyBtn = document.querySelector('button#easy-btn');
   const hardBtn = document.querySelector('button#hard-btn');
   const levelsBtn = document.querySelector('button#levels-btn');
@@ -232,18 +295,38 @@ function getPWADisplayMode() {
   const userIdShow = document.querySelector('#user-id-show');
   const userIdInp = document.querySelector('input#user-id');
   const changeUserBtn = document.querySelector('button#change-user-btn');
-  const enableRecordingSelect = document.querySelector('select#enable-recording');
-  const enableRecordingOptAuto = document.querySelector('option#enable-recording-opt-auto');
-  const shareScoreBtnAction = document.querySelector('select#share-score-btn-action');
-  const enableCanvasDebugInfo = document.querySelector('select#enable-canvas-debug-info');
-  const showDevToolsInShop = document.querySelector('select#show-devtools-in-shop');
-  const clearHTMLCacheBtn = document.querySelector('button#clear-html-cache-btn');
-  const clearScriptCacheBtn = document.querySelector('button#clear-script-cache-btn');
-  const clearStyleCacheBtn = document.querySelector('button#clear-style-cache-btn');
-  const clearLevelsCacheBtn = document.querySelector('button#clear-levels-cache-btn');
+  const enableRecordingSelect = document.querySelector(
+    'select#enable-recording'
+  );
+  const enableRecordingOptAuto = document.querySelector(
+    'option#enable-recording-opt-auto'
+  );
+  const shareScoreBtnAction = document.querySelector(
+    'select#share-score-btn-action'
+  );
+  const enableCanvasDebugInfo = document.querySelector(
+    'select#enable-canvas-debug-info'
+  );
+  const showDevToolsInShop = document.querySelector(
+    'select#show-devtools-in-shop'
+  );
+  const clearHTMLCacheBtn = document.querySelector(
+    'button#clear-html-cache-btn'
+  );
+  const clearScriptCacheBtn = document.querySelector(
+    'button#clear-script-cache-btn'
+  );
+  const clearStyleCacheBtn = document.querySelector(
+    'button#clear-style-cache-btn'
+  );
+  const clearLevelsCacheBtn = document.querySelector(
+    'button#clear-levels-cache-btn'
+  );
   const clearCacheBtn = document.querySelector('button#clear-cache-btn');
   const cacheReloadBtn = document.querySelector('button#cache-reload-btn');
-  const cssDisplayModeQueryResult = document.querySelector('#css-display-mode-query-result');
+  const cssDisplayModeQueryResult = document.querySelector(
+    '#css-display-mode-query-result'
+  );
   const jsPwaCheckResult = document.querySelector('#js-pwa-check-result');
   const achievementsScreen = document.querySelector('div#achievements-screen');
   const achievementsDiv = document.querySelector('div#achievements');
@@ -255,7 +338,9 @@ function getPWADisplayMode() {
   const joinGameScreen = document.querySelector('div#join-game-screen');
   const joinGameIdInp = document.querySelector('#join-game-id');
   const joinGameIdBtn = document.querySelector('button#join-game-id-btn');
-  const multiplayerGameScreen = document.querySelector('div#multiplayer-game-screen');
+  const multiplayerGameScreen = document.querySelector(
+    'div#multiplayer-game-screen'
+  );
   const gameIdSpan = document.querySelector('span#game-id-span');
   const gameIdCopy = document.querySelector('i#game-id-copy');
   const leftUserDiv = document.querySelector('div#left-user');
@@ -291,7 +376,7 @@ function getPWADisplayMode() {
     options = {
       button: 'Ok',
       persistent: false,
-      ...options
+      ...options,
     };
 
     popupTitle.innerText = title;
@@ -299,27 +384,25 @@ function getPWADisplayMode() {
     if (options.button) {
       popupOkBtn.innerText = options.button;
       popupOkBtn.style.display = '';
-    }
-    else {
+    } else {
       popupOkBtn.style.display = 'none';
     }
 
     popupContainer.classList.add('show');
 
-    if (options.persistent)
-      popupContainer.classList.add('persistent');
-  }
+    if (options.persistent) popupContainer.classList.add('persistent');
+  };
 
   // hide popup function
   window.hidePopup = function hidePopup() {
     popupContainer.classList.remove('show');
     popupContainer.classList.remove('persistent');
-  }
+  };
 
   // draw by vertices function
   function draw(vertices, ctx) {
     ctx.beginPath();
-    vertices.forEach(v => ctx.lineTo(v.x || v[0], v.y || v[1]));
+    vertices.forEach((v) => ctx.lineTo(v.x || v[0], v.y || v[1]));
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -328,9 +411,16 @@ function getPWADisplayMode() {
   // get user data function
   function getUserData(id = null, cache = false) {
     return new Promise((resolve, reject) => {
-      fetch('/get-user' + (id? `?uid=${id}` : (isCheesgle? `?uid=${cheesgle('uid') || ''}` : '')))
-        .then(resp => resp.json())
-        .then(resp => {
+      fetch(
+        '/get-user' +
+          (id
+            ? `?uid=${id}`
+            : isCheesgle
+            ? `?uid=${cheesgle('uid') || ''}`
+            : '')
+      )
+        .then((resp) => resp.json())
+        .then((resp) => {
           if (!id) {
             user_cache = resp;
             if (isCheesgle) {
@@ -338,28 +428,25 @@ function getPWADisplayMode() {
             } else {
               try {
                 localStorage.setItem('userCache', JSON.stringify(resp));
-              } catch (err) { }
+              } catch (err) {}
             }
           }
           resolve(resp);
         })
-        .catch(err => {
+        .catch((err) => {
           if (cache) {
-            if (user_cache)
-              resolve(user_cache);
+            if (user_cache) resolve(user_cache);
             else {
               if (isCheesgle) {
                 user_cache = cheesgle('userCache');
               } else {
                 try {
                   user_cache = JSON.parse(localStorage.getItem('userCache'));
-                } catch (err) { }
+                } catch (err) {}
               }
               resolve(user_cache);
             }
-          }
-          else
-            reject(err);
+          } else reject(err);
         });
     });
   }
@@ -367,47 +454,52 @@ function getPWADisplayMode() {
   // get user data function
   function getUserData2(cache = false) {
     return new Promise((resolve, reject) => {
-      getUserData(null, cache).then(data => {
-        if (!data) {
-          console.log("[%cr%c] Could not getUserData2 as null data was received", 'font-family: webdings;', '');
-          resolve(null);
-        }
+      getUserData(null, cache)
+        .then((data) => {
+          if (!data) {
+            console.log(
+              '[%cr%c] Could not getUserData2 as null data was received',
+              'font-family: webdings;',
+              ''
+            );
+            resolve(null);
+          }
 
-        // get nick
-        nickInp.innerText = data?.nick || '';
+          // get nick
+          nickInp.innerText = data?.nick || '';
 
-        // set nick color
-        nickInp.className = '';
-        nickInp.style.color = '';
-        if (nickColorClasses.includes(data?.itemsSelected?.nickColors))
-          nickInp.className = data?.itemsSelected?.nickColors || '';
-        else
-          nickInp.style.color = data?.itemsSelected?.nickColors || '';
+          // set nick color
+          nickInp.className = '';
+          nickInp.style.color = '';
+          if (nickColorClasses.includes(data?.itemsSelected?.nickColors))
+            nickInp.className = data?.itemsSelected?.nickColors || '';
+          else nickInp.style.color = data?.itemsSelected?.nickColors || '';
 
-        // get best score
-        if (data.bestScore)
-          bestScore = data.bestScore;
+          // get best score
+          if (data.bestScore) bestScore = data.bestScore;
 
-        // get coins
-        coinsSpan.innerText = data.coins || 0;
+          // get coins
+          coinsSpan.innerText = data.coins || 0;
 
-        // update ground color
-        if (data?.itemsSelected && data.itemsSelected['blockColors']) {
-          if (data.itemsSelected['blockColors'] in blockColorClasses)
-            ground.render.fillStyle = blockColorClasses[data.itemsSelected['blockColors']];
-          else
-            ground.render.fillStyle = data.itemsSelected['blockColors'] || 'white';
-        }
-        else
-          ground.render.fillStyle = 'white';
+          // update ground color
+          if (data?.itemsSelected && data.itemsSelected['blockColors']) {
+            if (data.itemsSelected['blockColors'] in blockColorClasses)
+              ground.render.fillStyle =
+                blockColorClasses[data.itemsSelected['blockColors']];
+            else
+              ground.render.fillStyle =
+                data.itemsSelected['blockColors'] || 'white';
+          } else ground.render.fillStyle = 'white';
 
-        // expose click handler
-        if (data?.items?.includes('devtools.exposeClickHandler'))
-        window.__exposedClickHandler = e => clickHandler(e || { type: 'mousedown' });
-        else delete window.__exposedClickHandler;
+          // expose click handler
+          if (data?.items?.includes('devtools.exposeClickHandler'))
+            window.__exposedClickHandler = (e) =>
+              clickHandler(e || { type: 'mousedown' });
+          else delete window.__exposedClickHandler;
 
-        resolve(data);
-      }).catch(reject);
+          resolve(data);
+        })
+        .catch(reject);
     });
   }
 
@@ -415,7 +507,7 @@ function getPWADisplayMode() {
   function getLeaderboard() {
     return new Promise((resolve, reject) => {
       fetch('/leaderboard')
-        .then(resp => resp.json())
+        .then((resp) => resp.json())
         .then(resolve)
         .catch(reject);
     });
@@ -431,12 +523,11 @@ function getPWADisplayMode() {
   // get prize wheel total chance function
   function getPrizeWheelTotalChance() {
     return new Promise((resolve, reject) => {
-      if (window.prizeWheelTotalChance)
-        resolve(window.prizeWheelTotalChance);
+      if (window.prizeWheelTotalChance) resolve(window.prizeWheelTotalChance);
       else
         fetch('/prize-wheel/total')
-          .then(resp => resp.text())
-          .then(resp => {
+          .then((resp) => resp.text())
+          .then((resp) => {
             window.prizeWheelTotalChance = parseInt(resp);
             resolve(window.prizeWheelTotalChance);
           })
@@ -453,8 +544,8 @@ function getPWADisplayMode() {
       }
 
       fetch('/shop')
-        .then(resp => resp.json())
-        .then(shop => {
+        .then((resp) => resp.json())
+        .then((shop) => {
           shop_cache = shop;
           resolve(shop);
         })
@@ -470,32 +561,34 @@ function getPWADisplayMode() {
   // update shop function
   function updateShop() {
     // get prize wheel total chance
-    getPrizeWheelTotalChance().then(total => {
-      // fetch user to update items cache
-      getUserData2().then(user => {
-        getDailySpinStatus().then(dailySpin => {
-          // fetch shop items
-          getShop().then(shop => {
-            _updateShop(shop, dailySpin, total, user);
+    getPrizeWheelTotalChance()
+      .then((total) => {
+        // fetch user to update items cache
+        getUserData2().then((user) => {
+          getDailySpinStatus().then((dailySpin) => {
+            // fetch shop items
+            getShop().then((shop) => {
+              _updateShop(shop, dailySpin, total, user);
+            });
           });
         });
+      })
+      .catch((err) => {
+        showPopup(
+          'Error',
+          `There was an error loading the shop:<br><samp>${err}</samp>`
+        );
+        refreshShopBtn.disabled = false;
       });
-    }).catch(err => {
-      showPopup('Error', `There was an error loading the shop:<br><samp>${err}</samp>`);
-      refreshShopBtn.disabled = false;
-    });
   }
 
   // html update shop function
   function _updateShop(shop, dailySpin = null, total = null, user = null) {
-    if (!dailySpin)
-      dailySpin = daily_spin_cache;
+    if (!dailySpin) dailySpin = daily_spin_cache;
 
-    if (!total)
-      total = window.prizeWheelTotalChance;
+    if (!total) total = window.prizeWheelTotalChance;
 
-    if (!user)
-      user = user_cache;
+    if (!user) user = user_cache;
 
     // clear all previous items
     shopItems.textContent = '';
@@ -505,12 +598,13 @@ function getPWADisplayMode() {
       shelfId = shelfId[0];
 
       if (shelfId == 'devtools') {
-        if (!settings.showDevToolsInShop)
-          continue;
+        if (!settings.showDevToolsInShop) continue;
       }
 
       // parse shelf name
-      const singularShelfName = (shelf.name || shelfId).replace(/s$/i, '').toLowerCase();
+      const singularShelfName = (shelf.name || shelfId)
+        .replace(/s$/i, '')
+        .toLowerCase();
 
       // create shelf div
       const div = document.createElement('div');
@@ -532,19 +626,22 @@ function getPWADisplayMode() {
 
         const fullId = getFullId(shelfId, itemId);
 
-        const itemBought = !!(user_cache?.items?.includes(fullId));
-        const itemSelected = !!(user_cache?.itemsSelected && user_cache?.itemsSelected[shelfId] == itemId);
+        const itemBought = !!user_cache?.items?.includes(fullId);
+        const itemSelected = !!(
+          user_cache?.itemsSelected &&
+          user_cache?.itemsSelected[shelfId] == itemId
+        );
 
         const buyingDisabled = item.buyingDisabled || shelf.buyingDisabled;
-        let buyingDisabledReason = item.buyingDisabledReason || shelf.buyingDisabledReason;
+        let buyingDisabledReason =
+          item.buyingDisabledReason || shelf.buyingDisabledReason;
         const inPrizeWheel = item.prizeWheel || shelf.prizeWheel;
 
         const isDailyPrize = shelfId == 'dailyPrize' && itemId == 'dailySpin';
 
         if (buyingDisabled && !buyingDisabledReason)
           buyingDisabledReason = 'Open prize wheel';
-        if (!buyingDisabledReason)
-          buyingDisabledReason = 'Can\'t buy';
+        if (!buyingDisabledReason) buyingDisabledReason = "Can't buy";
 
         const invisible = shelf.invisible || item.invisible;
 
@@ -565,37 +662,48 @@ function getPWADisplayMode() {
           if (shelfId == 'nickColors' && typeof user.nick == 'string') {
             if (nickColorClasses.includes(itemId))
               header2.classList.add(itemId);
-            else
-              header2.style.color = itemId;
+            else header2.style.color = itemId;
             header2.innerText = user.nick.substr(0, 7);
           }
 
           // create price tag
-          if (typeof item.price == 'number' || (isDailyPrize && !dailySpin.ready)) {
+          if (
+            typeof item.price == 'number' ||
+            (isDailyPrize && !dailySpin.ready)
+          ) {
             price = document.createElement('span');
             price.className = 'shop-price';
 
             if (typeof item.price == 'number')
-              price.innerHTML = `<i class="material-icons" translate="no">attach_money</i>${item.price || 'Free'}`;
+              price.innerHTML = `<i class="material-icons" translate="no">attach_money</i>${
+                item.price || 'Free'
+              }`;
           }
 
           // create buy/select/wheel button
           button = document.createElement('button');
-          button.innerText = itemBought ? (itemSelected ? 'Selected' : 'Select') : (buyingDisabled ? buyingDisabledReason : 'Buy');
+          button.innerText = itemBought
+            ? itemSelected
+              ? 'Selected'
+              : 'Select'
+            : buyingDisabled
+            ? buyingDisabledReason
+            : 'Buy';
           button.className = 'deep green';
         }
 
         if (inPrizeWheel) {
-          if (button)
-            button.classList.add('prize-wheel-btn');
+          if (button) button.classList.add('prize-wheel-btn');
 
           // add to prize wheel
           if (typeof item.chance == 'number' && item.chance > 0) {
             const text = item.name || itemId;
             prizeWheel.addSegment({
               fillStyle: isValidColor(itemId) ? itemId : randomHex(),
-              text: `${text}${text.includes(singularShelfName)? '' : (' ' + singularShelfName)}`,
-              size: item.chance ? item.chance * 360 / total : undefined
+              text: `${text}${
+                text.includes(singularShelfName) ? '' : ' ' + singularShelfName
+              }`,
+              size: item.chance ? (item.chance * 360) / total : undefined,
             });
           }
         }
@@ -604,14 +712,11 @@ function getPWADisplayMode() {
           if (!itemBought) {
             if (!inPrizeWheel) {
               button.classList.add('buy-btn');
-              if (buyingDisabled)
-                button.disabled = true;
+              if (buyingDisabled) button.disabled = true;
             }
-          }
-          else {
+          } else {
             button.classList.add('select-btn');
-            if (itemSelected)
-              button.disabled = true;
+            if (itemSelected) button.disabled = true;
             if (shelf.selectingDisabled || item.selectingDisabled)
               button.disabled = true;
           }
@@ -623,9 +728,10 @@ function getPWADisplayMode() {
             if (dailySpin.ready) {
               button.classList.add('daily-spin-btn');
               button.innerText = 'Spin for free!';
-            }
-            else {
-              price.innerText = `Ready in ${new Date(dailySpin.remaining).toISOString().substring(11, 19)}`;
+            } else {
+              price.innerText = `Ready in ${new Date(dailySpin.remaining)
+                .toISOString()
+                .substring(11, 19)}`;
             }
           }
 
@@ -633,8 +739,7 @@ function getPWADisplayMode() {
           div3.appendChild(header2);
 
           // add price tag to item div
-          if (price)
-            div3.appendChild(price);
+          if (price) div3.appendChild(price);
 
           // add button do item div
           div3.appendChild(button);
@@ -662,7 +767,7 @@ function getPWADisplayMode() {
     return new Promise((resolve, reject) => {
       fetch('/shop/buy', {
         method: 'POST',
-        body: fullId
+        body: fullId,
       })
         .then(resolve)
         .catch(reject);
@@ -674,10 +779,10 @@ function getPWADisplayMode() {
     return new Promise((resolve, reject) => {
       fetch('/shop/select', {
         method: 'POST',
-        body: fullId
+        body: fullId,
       })
-        .then(resp => {
-          resp.text().then(text => {
+        .then((resp) => {
+          resp.text().then((text) => {
             resolve([text, resp]);
           });
         })
@@ -710,27 +815,28 @@ function getPWADisplayMode() {
   }
 
   // draw prize wheel marker function
-  window.drawPrizeWheelMarker = function drawPrizeWheelMarker(updateCursor = false, updateButton = false) {
+  window.drawPrizeWheelMarker = function drawPrizeWheelMarker(
+    updateCursor = false,
+    updateButton = false
+  ) {
     // Get the canvas context the wheel uses
     let ctx = prizeWheel.ctx;
 
-    ctx.strokeStyle = 'navy';  // Set line colour.
-    ctx.fillStyle = 'aqua';  // Set fill colour.
+    ctx.strokeStyle = 'navy'; // Set line colour.
+    ctx.fillStyle = 'aqua'; // Set fill colour.
     ctx.lineWidth = 2;
-    ctx.beginPath();           // Begin path.
-    ctx.moveTo(170, 5);        // Move to initial position.
-    ctx.lineTo(230, 5);        // Draw lines to make the shape.
+    ctx.beginPath(); // Begin path.
+    ctx.moveTo(170, 5); // Move to initial position.
+    ctx.lineTo(230, 5); // Draw lines to make the shape.
     ctx.lineTo(200, 40);
     ctx.lineTo(171, 5);
-    ctx.stroke();              // Complete the path by stroking (draw lines).
-    ctx.fill();                // Then fill.
+    ctx.stroke(); // Complete the path by stroking (draw lines).
+    ctx.fill(); // Then fill.
 
     // update prize wheel screen cursor
     if (updateCursor) {
-      if (prizeWheel.isSpinning)
-        prizeWheelScreen.style.cursor = 'default';
-      else
-        prizeWheelScreen.style.cursor = 'pointer';
+      if (prizeWheel.isSpinning) prizeWheelScreen.style.cursor = 'default';
+      else prizeWheelScreen.style.cursor = 'pointer';
     }
 
     // update spin button disabled state
@@ -738,24 +844,27 @@ function getPWADisplayMode() {
       if (prizeWheel.isSpinning) {
         prizeWheelBtn.disabled = true;
         prizeWheelTenInp.disabled = true;
-      }
-      else {
+      } else {
         prizeWheelBtn.disabled = false;
         prizeWheelTenInp.disabled = false;
       }
     }
-  }
+  };
 
   // get prize function
   function getPrizeWheelPrize(n = 1, isDailySpin) {
     return new Promise((resolve, reject) => {
-      fetch(`/prize-wheel?n=${n}&isDailySpin=${isDailySpin}${isCheesgle? `&uid=${cheesgle('uid')}` : ''}`)
-        .then(resp => {
-          resp.text().then(text => {
+      fetch(
+        `/prize-wheel?n=${n}&isDailySpin=${isDailySpin}${
+          isCheesgle ? `&uid=${cheesgle('uid')}` : ''
+        }`
+      )
+        .then((resp) => {
+          resp.text().then((text) => {
             let r = text;
 
             if (resp.status == 200) {
-              r = r.split(/\s*,\s*/g).map(a => parseInt(a));
+              r = r.split(/\s*,\s*/g).map((a) => parseInt(a));
             }
 
             resolve([r, resp]);
@@ -769,12 +878,12 @@ function getPWADisplayMode() {
   const difficultyIcons = {
     easy: 'sentiment_satisfied',
     hard: 'sentiment_very_dissatisfied',
-    creative: 'sentiment_neutral'
+    creative: 'sentiment_neutral',
   };
 
   // achievement reward type icons
   const rewardTypeIcons = {
-    coins: 'attach_money'
+    coins: 'attach_money',
   };
 
   // set difficulty function
@@ -786,14 +895,11 @@ function getPWADisplayMode() {
     difficultyIcon.innerText = difficultyIcons[d];
 
     // update difficulty span
-    if (dSpan)
-      difficultySpan.innerText = d;
+    if (dSpan) difficultySpan.innerText = d;
 
     // show or hide creative controls
-    if (d == 'creative')
-      creativeControlsDiv.style.display = 'unset';
-    else
-      creativeControlsDiv.style.display = 'none';
+    if (d == 'creative') creativeControlsDiv.style.display = 'unset';
+    else creativeControlsDiv.style.display = 'none';
 
     // physics properties are updated automatically
   }
@@ -808,8 +914,7 @@ function getPWADisplayMode() {
     switch (difficulty) {
       case 'creative':
         const creativeLength = Number(creativeControlPlatformLength.value);
-        if (creativeLength)
-          return creativeLength;
+        if (creativeLength) return creativeLength;
       // else wil continue to next case
 
       case 'easy':
@@ -824,10 +929,16 @@ function getPWADisplayMode() {
 
   // function for clearing blocks
   function clearBlocks() {
-    console.groupCollapsed('%c[%cq%c]%c Clearing blocks', 'font-weight: normal;', 'font-family: webdings; font-weight: normal;', 'font-weight: normal', 'font-weight: normal;');
+    console.groupCollapsed(
+      '%c[%cq%c]%c Clearing blocks',
+      'font-weight: normal;',
+      'font-family: webdings; font-weight: normal;',
+      'font-weight: normal',
+      'font-weight: normal;'
+    );
     console.log('Bodies before:', engine.world.bodies.length);
     console.time('remove blocks');
-    Composite.allBodies(engine.world).forEach(body => {
+    Composite.allBodies(engine.world).forEach((body) => {
       if (body.label.includes('block') || body.label.includes('level'))
         Composite.remove(engine.world, body);
     });
@@ -840,8 +951,8 @@ function getPWADisplayMode() {
   function getAchievements() {
     return new Promise((resolve, reject) => {
       fetch('/achievements')
-        .then(resp => resp.json())
-        .then(resp => {
+        .then((resp) => resp.json())
+        .then((resp) => {
           achievements_cache = resp;
           resolve(resp);
         })
@@ -853,7 +964,7 @@ function getPWADisplayMode() {
   function getAchievements2() {
     return new Promise((resolve, reject) => {
       getAchievements()
-        .then(data => {
+        .then((data) => {
           // clear all children
           achievementsDiv.textContent = '';
 
@@ -862,9 +973,12 @@ function getPWADisplayMode() {
             const achievement = id[1];
             id = id[0];
 
-            const prog = checkAchievementProgress(achievement.progressCheck, user_cache) || 0;
-            const progPercent = prog / achievement.progressMax * 100;
-            const progCapped = progPercent > 100 ? 100 : (progPercent < 0 ? 0 : progPercent);
+            const prog =
+              checkAchievementProgress(achievement.progressCheck, user_cache) ||
+              0;
+            const progPercent = (prog / achievement.progressMax) * 100;
+            const progCapped =
+              progPercent > 100 ? 100 : progPercent < 0 ? 0 : progPercent;
             const completed = !!user_cache?.achievements?.includes(id);
 
             const div = document.createElement('div');
@@ -888,8 +1002,7 @@ function getPWADisplayMode() {
             progLabel.htmlFor = `${id}-progress`;
             if (completed)
               progLabel.innerHTML = `<i class="material-icons-outlined">done</i>`;
-            else
-              progLabel.innerText = `${Math.floor(progCapped)}%`;
+            else progLabel.innerText = `${Math.floor(progCapped)}%`;
             progLabel.className = 'achievement-proglabel';
 
             progress.max = achievement.progressMax;
@@ -905,8 +1018,10 @@ function getPWADisplayMode() {
 
             rewardDiv.className = 'achievement-reward-container';
 
-            rewardIcon.innerText = rewardTypeIcons[achievement.rewardType || 'coins'];
-            rewardIcon.className = 'achievement-reward-icon material-icons-outlined';
+            rewardIcon.innerText =
+              rewardTypeIcons[achievement.rewardType || 'coins'];
+            rewardIcon.className =
+              'achievement-reward-icon material-icons-outlined';
 
             reward.innerText = achievement.reward;
             reward.className = 'achievement-reward';
@@ -937,8 +1052,15 @@ function getPWADisplayMode() {
   // function to check an achievement progress
   function checkAchievementProgress(check, vars) {
     // parse for security
-    if (/[a-z0-9]+\([^()]*\)|window|document|location|storage|cache|new|api|definepropert|script/gim.test(check)) {
-      showPopup('Security Error', 'There was a security problem checking the progress of an achievement. Please try again later');
+    if (
+      /[a-z0-9]+\([^()]*\)|window|document|location|storage|cache|new|api|definepropert|script/gim.test(
+        check
+      )
+    ) {
+      showPopup(
+        'Security Error',
+        'There was a security problem checking the progress of an achievement. Please try again later'
+      );
 
       return 0;
     }
@@ -947,9 +1069,11 @@ function getPWADisplayMode() {
 
     try {
       progress = eval(check);
-    }
-    catch (err) {
-      showPopup('Error', `There was an error checking the progress of an achievement:<br><samp>${err}</samp>`);
+    } catch (err) {
+      showPopup(
+        'Error',
+        `There was an error checking the progress of an achievement:<br><samp>${err}</samp>`
+      );
 
       return 0;
     }
@@ -958,16 +1082,16 @@ function getPWADisplayMode() {
   }
 
   // when signed in with google
-  window.onGoogleSignIn = user => {
+  window.onGoogleSignIn = (user) => {
     fetch('/googleToken', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-      .then(resp => {
-        resp.text().then(text => {
+      .then((resp) => {
+        resp.text().then((text) => {
           if (resp.status == 200) {
             showPopup('Signed in', text);
 
@@ -975,7 +1099,7 @@ function getPWADisplayMode() {
             delete cheesgleData.uid;
             try {
               localStorage.removeItem('uid');
-            } catch (err) { }
+            } catch (err) {}
 
             location.reload();
             // const payload = JSON.parse(text);
@@ -988,15 +1112,17 @@ function getPWADisplayMode() {
             // console.log('User ID:', payload.sub);
             // console.log('Picture:', payload.picture);
             // console.groupEnd();
-          }
-          else {
+          } else {
             throw new Error(text);
           }
         });
       })
-      .catch(err => {
-        showPopup('Sign in Error', `There was an error signing in with Google:<br><samp>${err}</samp>`);
-      })
+      .catch((err) => {
+        showPopup(
+          'Sign in Error',
+          `There was an error signing in with Google:<br><samp>${err}</samp>`
+        );
+      });
   };
 
   // function to update account switcher accounts
@@ -1013,39 +1139,50 @@ function getPWADisplayMode() {
       // check for accounts
       if (user_cache?.goog?.sub && navigator.onLine) {
         // get goog
-        getGoog().then(goog => {
-          // get current user ID
-          const currentID = Cookies.get('uid');
+        getGoog()
+          .then((goog) => {
+            // get current user ID
+            const currentID = Cookies.get('uid');
 
-          // get accounts info
-          for (const userID of goog.ids) {
-            (() => {
-              if (userID == currentID)
-                return new Promise(resolve => resolve(user_cache));
-              else
-                return getUserData(userID);
-            })().then(user2 => {
-              const opt = document.createElement('option');
-              opt.label = user2.nick;
-              opt.innerText = `${user2.nick} (${user2.coins} coins)`;
-              opt.value = userID;
-              if (userID == currentID)
-                opt.selected = true;
-              accountSwitcher.appendChild(opt);
-            }).catch(err => {
-              console.error('Error fetching user for Account Switcher:', err);
-            });
-          }
+            // get accounts info
+            for (const userID of goog.ids) {
+              (() => {
+                if (userID == currentID)
+                  return new Promise((resolve) => resolve(user_cache));
+                else return getUserData(userID);
+              })()
+                .then((user2) => {
+                  const opt = document.createElement('option');
+                  opt.label = user2.nick;
+                  opt.innerText = `${user2.nick} (${user2.coins} coins)`;
+                  opt.value = userID;
+                  if (userID == currentID) opt.selected = true;
+                  accountSwitcher.appendChild(opt);
+                })
+                .catch((err) => {
+                  console.error(
+                    'Error fetching user for Account Switcher:',
+                    err
+                  );
+                });
+            }
 
-          resolve(true);
-        }).catch(err => {
-          showPopup('Error', `There was an error getting your information from Google:<br><samp>${err}</samp>`);
-        });
-      }
-      else {
+            resolve(true);
+          })
+          .catch((err) => {
+            showPopup(
+              'Error',
+              `There was an error getting your information from Google:<br><samp>${err}</samp>`
+            );
+          });
+      } else {
         const opt = document.createElement('option');
         opt.disabled = true;
-        opt.label = navigator.onLine ? (user_cache ? 'Not signed in with Google' : 'Not signed in') : 'Not connected to the Internet';
+        opt.label = navigator.onLine
+          ? user_cache
+            ? 'Not signed in with Google'
+            : 'Not signed in'
+          : 'Not connected to the Internet';
         opt.selected = true;
         accountSwitcher.appendChild(opt);
 
@@ -1058,31 +1195,27 @@ function getPWADisplayMode() {
   function getGoog(retryTimes = 2) {
     return new Promise((resolve, reject) => {
       fetch('/get-goog')
-        .then(resp => {
-          resp.text().then(text => {
+        .then((resp) => {
+          resp.text().then((text) => {
             if (resp.status == 200) {
               const json = JSON.parse(text);
               resolve(json);
-            }
-            else {
+            } else {
               if (retryTimes > 0) {
                 getGoog(retryTimes - 1)
                   .then(resolve)
                   .catch(reject);
-              }
-              else
-                reject(text);
+              } else reject(text);
             }
           });
         })
-        .catch(reject)
+        .catch(reject);
     });
   }
 
   // show levels in html
   function updateLevels() {
-    if (!user_cache)
-      return;
+    if (!user_cache) return;
 
     // remove previous HTML
     levelsDiv.textContent = '';
@@ -1099,8 +1232,7 @@ function getPWADisplayMode() {
       div.innerText = i + 1;
       div.dataset.lid = i;
 
-      if (i > levelsUnlocked)
-        div.classList.add('locked-level');
+      if (i > levelsUnlocked) div.classList.add('locked-level');
 
       const lock = document.createElement('i');
       lock.innerText = 'lock';
@@ -1117,13 +1249,12 @@ function getPWADisplayMode() {
     const level = levels.levels[levelId];
 
     // reset
-    if (retry)
-      retryBtn.click();
+    if (retry) retryBtn.click();
 
     // move victory detector
     Body.setPosition(victoryDetector, {
       x: groundPos.vx,
-      y: level.victoryY
+      y: level.victoryY,
     });
 
     // make visible
@@ -1131,15 +1262,14 @@ function getPWADisplayMode() {
 
     // custom bodies
     if (level.create) {
-      const bodies = level.create(cnvWidth, cnvHeight).map(body => {
-        if (!body.render)
-          body.render = {};
+      const bodies = level.create(cnvWidth, cnvHeight).map((body) => {
+        if (!body.render) body.render = {};
 
         if (user_cache?.itemsSelected?.blockColors) {
           const color = user_cache.itemsSelected.blockColors;
-          body.render.fillStyle = (color in blockColorClasses) ? blockColorClasses[color] : color;
-        }
-        else {
+          body.render.fillStyle =
+            color in blockColorClasses ? blockColorClasses[color] : color;
+        } else {
           body.render.fillStyle = 'white';
         }
 
@@ -1153,9 +1283,7 @@ function getPWADisplayMode() {
     }
 
     // custom initial step
-    if (typeof level.initStep == 'number')
-      step = level.initStep;
-
+    if (typeof level.initStep == 'number') step = level.initStep;
 
     // difficulty
     setDifficulty(level.difficulty || levels.difficulty);
@@ -1185,7 +1313,12 @@ function getPWADisplayMode() {
   // moves away grounds and victoryDetector depending if is in level
   // should be called after calling clearBlocks()
   function resetGrounds() {
-    console.groupCollapsed('%c[%ci%c] Resetting grounds...', 'font-weight: normal;', 'font-family: webdings; font-weight: normal;', 'font-weight: normal;');
+    console.groupCollapsed(
+      '%c[%ci%c] Resetting grounds...',
+      'font-weight: normal;',
+      'font-family: webdings; font-weight: normal;',
+      'font-weight: normal;'
+    );
 
     if (is_playing_level) {
       console.group('Is playing level');
@@ -1197,35 +1330,34 @@ function getPWADisplayMode() {
         // move ground down
         Body.setPosition(ground, {
           x: ground.position.x,
-          y: deathDetector.position.y * groundPos.ly
+          y: deathDetector.position.y * groundPos.ly,
         });
         Body.setPosition(ground2, {
           x: ground2.position.x,
-          y: deathDetector.position.y * groundPos.ly
+          y: deathDetector.position.y * groundPos.ly,
         });
       }
 
       console.groupEnd();
-    }
-    else {
+    } else {
       console.group('Not playing level');
 
       // reset ground
       console.log('Putting normal grounds back');
       Body.setPosition(ground, {
         x: groundPos.x,
-        y: groundPos.y
+        y: groundPos.y,
       });
       Body.setPosition(ground2, {
         x: groundPos.x2,
-        y: groundPos.y2
+        y: groundPos.y2,
       });
 
       // move victoryDetector away
       console.log('Moving victory detector away');
       Body.setPosition(victoryDetector, {
         x: groundPos.vm,
-        y: 10
+        y: 10,
       });
 
       console.groupEnd();
@@ -1237,9 +1369,12 @@ function getPWADisplayMode() {
   // function to get the status of the daily spin
   function getDailySpinStatus() {
     return new Promise((resolve, reject) => {
-      fetch('/prize-wheel/daily/status' + (isCheesgle? `?uid=${cheesgle('uid')}` : ''))
-        .then(resp => resp.json())
-        .then(data => {
+      fetch(
+        '/prize-wheel/daily/status' +
+          (isCheesgle ? `?uid=${cheesgle('uid')}` : '')
+      )
+        .then((resp) => resp.json())
+        .then((data) => {
           daily_spin_cache = data;
           resolve(data);
         })
@@ -1249,7 +1384,10 @@ function getPWADisplayMode() {
 
   // get service worker function
   async function getServiceWorker() {
-    return navigator.serviceWorker.controller || (await navigator.serviceWorker.ready).active
+    return (
+      navigator.serviceWorker.controller ||
+      (await navigator.serviceWorker.ready).active
+    );
   }
 
   // save settings
@@ -1265,14 +1403,19 @@ function getPWADisplayMode() {
   async function playPopAudio() {
     if (audioPop.readyState == 4) {
       try {
-        const shouldPlay = audioPop.paused ? true : (audioPop.currentTime > 0.06);
+        const shouldPlay = audioPop.paused ? true : audioPop.currentTime > 0.06;
         if (shouldPlay) {
           await audioPop.pause();
           audioPop.currentTime = 0;
           await audioPop.play();
         }
       } catch (err) {
-        console.log('[%cr%c] Error playing pop audio:', 'font-family: webdings;', '', err);
+        console.log(
+          '[%cr%c] Error playing pop audio:',
+          'font-family: webdings;',
+          '',
+          err
+        );
       }
     } else if (audioPop.readyState == 0 && !startedLoadingAudioPop) {
       audioPop.load();
@@ -1285,26 +1428,28 @@ function getPWADisplayMode() {
     return new Promise((resolve, reject) => {
       fetch('/latest-pwa-version', {
         method: 'POST',
-        body: currentVersion
+        body: currentVersion,
       })
-        .then(resp => {
+        .then((resp) => {
           if (resp.headers.get('content-type')?.includes('application/json')) {
-            resp.json().then(data => {
+            resp.json().then((data) => {
               version_cache = data;
               resolve(data);
             });
           } else {
             if (resp.status == 502 && retryTimes > 0) {
-              console.log('[%cr%c] Error fetching latest version, retrying...', 'font-family: webdings;', '');
+              console.log(
+                '[%cr%c] Error fetching latest version, retrying...',
+                'font-family: webdings;',
+                ''
+              );
               getLatestVersion(currentVersion, retryTimes - 1)
                 .then(resolve)
                 .catch(reject);
-            }
-            else
-              reject('response is not of type JSON');
+            } else reject('response is not of type JSON');
           }
         })
-        .catch(reject)
+        .catch(reject);
     });
   }
 
@@ -1323,13 +1468,12 @@ function getPWADisplayMode() {
   }
   Object.defineProperty(window, 'innerSmall', {
     get: winSmallest,
-    set: v => undefined
+    set: (v) => undefined,
   });
 
   // function to show/hide canvas debug info
   function showCanvasDebugInfo(show = null) {
-    if (show === null)
-      show = settings.enableCanvasDebugInfo;
+    if (show === null) show = settings.enableCanvasDebugInfo;
     canvasDebugInfo.style.display = show ? 'unset' : 'none';
   }
 
@@ -1351,29 +1495,28 @@ function getPWADisplayMode() {
     }
 
     if (value) {
-      if (key != '__updateCheesgle')
-        cheesgleData[key] = value;
-      window.parent.postMessage({ type: "cheesgleSet", data: JSON.stringify(cheesgleData) }, "*");
+      if (key != '__updateCheesgle') cheesgleData[key] = value;
+      window.parent.postMessage(
+        { type: 'cheesgleSet', data: JSON.stringify(cheesgleData) },
+        '*'
+      );
     } else {
-      if (cheesgleData)
-        return cheesgleData[key] || null;
+      if (cheesgleData) return cheesgleData[key] || null;
       else return null;
     }
-  } window.cheesgleFunc = cheesgle;
+  }
+  window.cheesgleFunc = cheesgle;
 
   // listen for Cheesgle data
-  window.addEventListener('message', e => {
+  window.addEventListener('message', (e) => {
     if (isCheesgle && typeof e.data == 'object' && e.data.type) {
       if (e.data.type == 'info' || e.data.savedAppData) {
-        if (e.data.savedAppDataParsed)
-        cheesgleData = e.data.savedAppData;
+        if (e.data.savedAppDataParsed) cheesgleData = e.data.savedAppData;
         else cheesgleData = JSON.parse(e.data.savedAppData);
-        if (!cheesgleData)
-          cheesgleData = {};
+        if (!cheesgleData) cheesgleData = {};
         if (!cheesgle('uid') && typeof window.createAccountPopup == 'function')
-        window.createAccountPopup();
-      }
-      else if (e.data.type == 'closing') {
+          window.createAccountPopup();
+      } else if (e.data.type == 'closing') {
         cheesgleIsClosing = true;
         console.log('Cheesgle App is closing');
       }
@@ -1386,10 +1529,10 @@ function getPWADisplayMode() {
   // initialize socket.io instance
   let socket = io({
     reconnection: false, // prevent reconnecting automatically
-    autoConnect: false,  // prevent connecting instantly
+    autoConnect: false, // prevent connecting instantly
     extraHeaders: {
-      'X-Cookie': isCheesgle? `uid=${cheesgle('uid') || ''};` : ''
-    }
+      'X-Cookie': isCheesgle ? `uid=${cheesgle('uid') || ''};` : '',
+    },
   });
 
   // module aliases
@@ -1403,7 +1546,7 @@ function getPWADisplayMode() {
 
   // create an engine
   let engine = Engine.create({
-    enableSleeping: true
+    enableSleeping: true,
   });
   //engine.world.gravity.y *= 1;
   //engine.velocityIterations = 6;
@@ -1425,16 +1568,15 @@ function getPWADisplayMode() {
       width: cnvWidth,
       height: cnvHeight,
       background: 'transparent',
-      hasBounds: true
-    }
+      hasBounds: true,
+    },
   });
 
   // give canvas ID
   render.canvas.id = 'game-canvas';
 
   // make the canvas background
-  if (canvasBackground)
-    render.canvas.classList.add('canvas-bg');
+  if (canvasBackground) render.canvas.classList.add('canvas-bg');
 
   // update multiplayer canvases
   // width and height to singleplayer canvas
@@ -1462,52 +1604,76 @@ function getPWADisplayMode() {
     y2: render.options.height + 10,
     ly: 2,
     vx: render.options.width / 2,
-    vm: render.options.width * 5
+    vm: render.options.width * 5,
   };
 
   // create ground
-  let ground = Bodies.rectangle(groundPos.x, groundPos.y, render.options.width - 10, 10, {
-    isStatic: true,
-    render: {
-      fillStyle: 'white'
-    },
-    label: 'ground realGround',
-    restitution: 0
-  });
+  let ground = Bodies.rectangle(
+    groundPos.x,
+    groundPos.y,
+    render.options.width - 10,
+    10,
+    {
+      isStatic: true,
+      render: {
+        fillStyle: 'white',
+      },
+      label: 'ground realGround',
+      restitution: 0,
+    }
+  );
 
   // invisible ground bellow for collisions
-  let ground2 = Bodies.rectangle(groundPos.x2, groundPos.y2, render.options.width - 10, 50, {
-    isStatic: true,
-    render: {
-      visible: false,
-      fillStyle: 'rgba(255, 0, 0, 0.5)'
-    },
-    label: 'ground2',
-    restitution: 0
-  });
+  let ground2 = Bodies.rectangle(
+    groundPos.x2,
+    groundPos.y2,
+    render.options.width - 10,
+    50,
+    {
+      isStatic: true,
+      render: {
+        visible: false,
+        fillStyle: 'rgba(255, 0, 0, 0.5)',
+      },
+      label: 'ground2',
+      restitution: 0,
+    }
+  );
 
   // create death detector
-  let deathDetector = Bodies.rectangle(render.options.width / 2, render.options.height * 2 - 10, render.options.width * 5, 50, {
-    isStatic: true,
-    isSensor: true,
-    render: {
-      visible: false,
-      fillStyle: 'orange',
-      strokeStyle: 'black'
-    },
-    label: 'deathDetector'
-  });
+  let deathDetector = Bodies.rectangle(
+    render.options.width / 2,
+    render.options.height * 2 - 10,
+    render.options.width * 5,
+    50,
+    {
+      isStatic: true,
+      isSensor: true,
+      render: {
+        visible: false,
+        fillStyle: 'orange',
+        strokeStyle: 'black',
+      },
+      label: 'deathDetector',
+    }
+  );
 
   // create victory detector
-  let victoryDetector = Bodies.rectangle(groundPos.vm, 10, render.options.width - 10, 10, {
-    isStatic: true,
-    isSensor: true,
-    render: {
-      visible: false,
-      fillStyle: 'rgba(22, 255, 56, 0.33)' // transparent green
-    },
-    label: 'victoryDetector'
-  });
+  let victoryDetector = Bodies.rectangle(
+    groundPos.vm,
+    10,
+    render.options.width - 10,
+    10,
+    {
+      isStatic: true,
+      isSensor: true,
+      render: {
+        visible: false,
+        fillStyle: 'rgba(22, 255, 56, 0.33)', // transparent green
+      },
+      label: 'victoryDetector',
+    }
+  );
 
   // save most recently placed block
   let recent = null;
@@ -1535,54 +1701,64 @@ function getPWADisplayMode() {
   let is_playing_level_lid = null;
 
   let settings = (() => {
-    let obj = {}; const v = func => x => {
+    let obj = {};
+    const v = (func) => (x) => {
       saveSettings();
       return func(x);
-    }; Object.defineProperties(obj, {
+    };
+    Object.defineProperties(obj, {
       shareScoreBtnAction: {
         enumerable: true,
         get: () => shareScoreBtnAction.value,
-        set: v(x => shareScoreBtnAction.value = x)
-      }, enableRecording: {
+        set: v((x) => (shareScoreBtnAction.value = x)),
+      },
+      enableRecording: {
         enumerable: true,
         get: () => enableRecordingSelect.value,
-        set: v(x => enableRecordingSelect.value = x)
-      }, enableCanvasDebugInfo: {
+        set: v((x) => (enableRecordingSelect.value = x)),
+      },
+      enableCanvasDebugInfo: {
         enumerable: true,
         get: () => enableCanvasDebugInfo.value == 'true',
-        set: v(x => enableCanvasDebugInfo.value = x)
-      }, showDevToolsInShop: {
+        set: v((x) => (enableCanvasDebugInfo.value = x)),
+      },
+      showDevToolsInShop: {
         enumerable: true,
         get: () => showDevToolsInShop.value == 'true',
-        set: v(x => showDevToolsInShop.value = x)
-      }
-    }); return obj;
+        set: v((x) => (showDevToolsInShop.value = x)),
+      },
+    });
+    return obj;
   })();
 
   // load saved settings
   console.log('[%c@%c] Loading settings', 'font-family: webdings;', '');
   try {
-    const loadSettings = cheesgle('settings') || JSON.parse(localStorage.getItem('settings'));
+    const loadSettings =
+      cheesgle('settings') || JSON.parse(localStorage.getItem('settings'));
     if (loadSettings) {
-      for (const k of Object.entries(loadSettings))
-        settings[k[0]] = k[1];
+      for (const k of Object.entries(loadSettings)) settings[k[0]] = k[1];
       saveSettings();
     }
   } catch (err) {
-    console.log("[%cr%c] Error loading settings:", 'font-family: webdings;', '', err);
+    console.log(
+      '[%cr%c] Error loading settings:',
+      'font-family: webdings;',
+      '',
+      err
+    );
   }
 
   // save settings when user changes them
-  const saveSettingsHandler = e => {
-    if (!e.target.classList.contains('settings-option'))
-      return;
+  const saveSettingsHandler = (e) => {
+    if (!e.target.classList.contains('settings-option')) return;
 
     saveSettings();
   };
   document.addEventListener('input', saveSettingsHandler);
 
   // save settings before leaving the page
-  window.addEventListener('beforeunload', e => {
+  window.addEventListener('beforeunload', (e) => {
     saveSettings();
   });
 
@@ -1590,7 +1766,7 @@ function getPWADisplayMode() {
   const blockColorClasses = {
     rainbow: render.context.createLinearGradient(0, 0, 400, 0),
     gold: render.context.createLinearGradient(0, 0, 400, 0),
-    silver: render.context.createLinearGradient(0, 0, 400, 0)
+    silver: render.context.createLinearGradient(0, 0, 400, 0),
   };
   blockColorClasses.rainbow.addColorStop(0.0, 'red');
   blockColorClasses.rainbow.addColorStop(1 / 6, 'orange');
@@ -1599,23 +1775,28 @@ function getPWADisplayMode() {
   blockColorClasses.rainbow.addColorStop(4 / 6, 'blue');
   blockColorClasses.rainbow.addColorStop(5 / 6, 'indigo');
   blockColorClasses.rainbow.addColorStop(1.0, 'violet');
-  blockColorClasses.gold.addColorStop(0.00, 'gold');
+  blockColorClasses.gold.addColorStop(0.0, 'gold');
   blockColorClasses.gold.addColorStop(0.25, '#f2e9b6');
-  blockColorClasses.gold.addColorStop(0.50, '#fefeb3');
-  blockColorClasses.gold.addColorStop(0.60, 'gold');
+  blockColorClasses.gold.addColorStop(0.5, '#fefeb3');
+  blockColorClasses.gold.addColorStop(0.6, 'gold');
   blockColorClasses.gold.addColorStop(0.75, '#feef9d');
-  blockColorClasses.gold.addColorStop(1.00, 'white');
-  blockColorClasses.silver.addColorStop(0.00, '#D7E1EC');
-  blockColorClasses.silver.addColorStop(0.10, '#bfd9f2');
+  blockColorClasses.gold.addColorStop(1.0, 'white');
+  blockColorClasses.silver.addColorStop(0.0, '#D7E1EC');
+  blockColorClasses.silver.addColorStop(0.1, '#bfd9f2');
   blockColorClasses.silver.addColorStop(0.25, 'white');
   blockColorClasses.silver.addColorStop(0.35, '#ebf2f9');
-  blockColorClasses.silver.addColorStop(0.50, '#D7E1EC');
+  blockColorClasses.silver.addColorStop(0.5, '#D7E1EC');
   blockColorClasses.silver.addColorStop(0.75, '#d4e9ff');
-  blockColorClasses.silver.addColorStop(1.00, '#ebf2f9');
+  blockColorClasses.silver.addColorStop(1.0, '#ebf2f9');
 
   // video recording stuff
   const enableRecording = (updateBtn = true) => {
-    const enabled = settings.enableRecording == 'auto' ? supportsRecording : (settings.enableRecording == 'true' ? true : false);
+    const enabled =
+      settings.enableRecording == 'auto'
+        ? supportsRecording
+        : settings.enableRecording == 'true'
+        ? true
+        : false;
 
     // style/hide download recording button
     if (updateBtn) {
@@ -1629,20 +1810,45 @@ function getPWADisplayMode() {
         downloadRecordingLink.style.textDecoration = styles.textDecoration;
 
         downloadRecordingLink.style.display = '';
-      }
-      else
-        downloadRecordingLink.style.display = 'none';
+      } else downloadRecordingLink.style.display = 'none';
     }
 
     return enabled;
   };
   let supportsRecording = true;
   if (uaParser) {
-    if (['console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'].includes(uaParser.getDevice().type?.toLowerCase()))
+    if (
+      [
+        'console',
+        'mobile',
+        'tablet',
+        'smarttv',
+        'wearable',
+        'embedded',
+      ].includes(uaParser.getDevice().type?.toLowerCase())
+    )
       supportsRecording = false;
-    else if (['android browser', 'opera mini', 'opera mobi', 'opera tablet', 'chrome headless', 'iemobile', 'nokiabrowser'].includes(uaParser.getBrowser().name?.toLowerCase()))
+    else if (
+      [
+        'android browser',
+        'opera mini',
+        'opera mobi',
+        'opera tablet',
+        'chrome headless',
+        'iemobile',
+        'nokiabrowser',
+      ].includes(uaParser.getBrowser().name?.toLowerCase())
+    )
       supportsRecording = false;
-    else if (['android', 'android-x86', 'windows phone', 'windows mobile', 'ios'].includes(uaParser.getOS().name?.toLowerCase()))
+    else if (
+      [
+        'android',
+        'android-x86',
+        'windows phone',
+        'windows mobile',
+        'ios',
+      ].includes(uaParser.getOS().name?.toLowerCase())
+    )
       supportsRecording = false;
   }
   let isRecording = false;
@@ -1652,10 +1858,17 @@ function getPWADisplayMode() {
   let stream = null;
   let mediaRecorder = null;
 
-  console.log('[%c\xB7%c] Recording is', 'font-family: webdings;', '', enableRecording() ? 'enabled' : 'disabled');
+  console.log(
+    '[%c\xB7%c] Recording is',
+    'font-family: webdings;',
+    '',
+    enableRecording() ? 'enabled' : 'disabled'
+  );
 
   // update auto option in settings
-  enableRecordingOptAuto.innerText = `if available (${supportsRecording ? 'yes' : 'no'})`;
+  enableRecordingOptAuto.innerText = `if available (${
+    supportsRecording ? 'yes' : 'no'
+  })`;
 
   // death screenshot stuff
   let deathScreenshots = [];
@@ -1663,17 +1876,17 @@ function getPWADisplayMode() {
 
   // hide share score button if sharing is not supported
   const featurePolicySupported = !!document.featurePolicy;
-  const webSharePolicyEnabled = featurePolicySupported ? (
-    document.featurePolicy.features().includes('web-share') ?
-      document.featurePolicy.allowsFeature('web-share') :
-      true
-  ) : true;
-  if (!(
-    webSharePolicyEnabled &&
-    navigator.canShare &&
-    navigator.share
-  )) {
-    console.log('[%ci%c] Share score button was hiden either because the Feature Policy disabled the Web Share API or the browser does not support the Web Share API', 'font-family: webdings;', '');
+  const webSharePolicyEnabled = featurePolicySupported
+    ? document.featurePolicy.features().includes('web-share')
+      ? document.featurePolicy.allowsFeature('web-share')
+      : true
+    : true;
+  if (!(webSharePolicyEnabled && navigator.canShare && navigator.share)) {
+    console.log(
+      '[%ci%c] Share score button was hiden either because the Feature Policy disabled the Web Share API or the browser does not support the Web Share API',
+      'font-family: webdings;',
+      ''
+    );
     shareScoreBtn.style.display = 'none';
   }
 
@@ -1684,82 +1897,86 @@ function getPWADisplayMode() {
   setDifficulty('easy', false);
 
   // add all of the bodies to the world
-  Composite.add(engine.world, [ground, ground2, deathDetector, victoryDetector]);
+  Composite.add(engine.world, [
+    ground,
+    ground2,
+    deathDetector,
+    victoryDetector,
+  ]);
 
   // run the renderer
   Render.run(render);
 
   // create runner
   let runner = Runner.create({
-    isFixed: false
+    isFixed: false,
   });
 
   // run the engine
   Runner.run(runner, engine);
 
   // difficulties with less bounce
-  const difficultiesWithLessBounce = [
-    'easy'
-  ];
+  const difficultiesWithLessBounce = ['easy'];
 
   // difficulty block slopes
   const difficultyBlockSlopes = {
-    'easy': 0.5,
-    'hard': 0.9,
-    'creative': 0.5
+    easy: 0.5,
+    hard: 0.9,
+    creative: 0.5,
   };
 
   // difficulties with scores
-  const difficultiesWithScores = [
-    'easy',
-    'hard'
-  ];
+  const difficultiesWithScores = ['easy', 'hard'];
 
-  const difficultiesWithDeaths = [
-    'easy',
-    'hard'
-  ];
+  const difficultiesWithDeaths = ['easy', 'hard'];
 
   let creativeControls = (() => {
     let obj = {};
     Object.defineProperties(obj, {
       static: {
         get: () => creativeControlStatic.checked,
-        set: ck => creativeControlStatic.checked = ck
+        set: (ck) => (creativeControlStatic.checked = ck),
       },
       bounce: {
         get: () => creativeControlBounce.checked,
-        set: ck => creativeControlBounce.checked = ck
-      }
+        set: (ck) => (creativeControlBounce.checked = ck),
+      },
     });
     return obj;
   })();
 
   // before tick
-  Events.on(runner, "beforeTick", () => {
+  Events.on(runner, 'beforeTick', () => {
     if (typeof current == 'number') {
       current++;
 
       if (current >= 30) {
         const y = 35 + camera_y;
 
-        const step_ = is_playing_level ? (levels.levels[is_playing_level_lid].getStep ? levels.levels[is_playing_level_lid].getStep() : step) : step;
+        const step_ = is_playing_level
+          ? levels.levels[is_playing_level_lid].getStep
+            ? levels.levels[is_playing_level_lid].getStep()
+            : step
+          : step;
         if (step_ == 3) {
           current = Bodies.rectangle(20, y, getPlatformSize(), 10);
           //Body.setMass(current, current.mass * 2);
-        }
-        else {
-          current = Bodies.trapezoid(20, y, 30, 60, difficultyBlockSlopes[difficulty]);
+        } else {
+          current = Bodies.trapezoid(
+            20,
+            y,
+            30,
+            60,
+            difficultyBlockSlopes[difficulty]
+          );
           //Body.setMass(current, current.mass / 2);
         }
 
-        if (step >= 4)
-          step = 1;
+        if (step >= 4) step = 1;
 
         Body.setStatic(current, true);
 
-        if (!current.render)
-          current.render = {};
+        if (!current.render) current.render = {};
 
         current.render.fillStyle = ground.render.fillStyle;
         current.label = 'block';
@@ -1775,11 +1992,9 @@ function getPWADisplayMode() {
 
         Composite.add(engine.world, current);
       }
-    }
-    else if (current) {
+    } else if (current) {
       try {
-        if (!current._dir)
-          current._dir = 1;
+        if (!current._dir) current._dir = 1;
 
         if (current._dir == 1 && current.position.x >= cnvWidth - 20)
           current._dir = -1;
@@ -1788,15 +2003,14 @@ function getPWADisplayMode() {
 
         Body.setPosition(current, {
           x: current.position.x + 2 * current._dir,
-          y: current.position.y
+          y: current.position.y,
         });
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Error in beforeTick on "else if (current)":', err);
       }
     }
 
-    Composite.allBodies(engine.world).forEach(body => {
+    Composite.allBodies(engine.world).forEach((body) => {
       // reduce bounce
       if (body.checkVelocityNextTick) {
         body.checkVelocityNextTick = false;
@@ -1805,18 +2019,27 @@ function getPWADisplayMode() {
           if (difficultiesWithLessBounce.includes(difficulty)) {
             Body.setVelocity(body, {
               x: body.velocity.x,
-              y: body.velocity.y / 5
+              y: body.velocity.y / 5,
             });
 
-            console.log('[%c\xBC%c] Reduced bounce on body because difficulty is on', 'font-family: webdings;', '', difficulty);
-          }
-          else if (creativeControls.bounce) {
+            console.log(
+              '[%c\xBC%c] Reduced bounce on body because difficulty is on',
+              'font-family: webdings;',
+              '',
+              difficulty
+            );
+          } else if (creativeControls.bounce) {
             Body.setVelocity(body, {
               x: body.velocity.x,
-              y: body.velocity.y / 5
+              y: body.velocity.y / 5,
             });
 
-            console.log('[%c\xBC%c] Reduced bounce on body because creative control \'bounce\' is set to', 'font-family: webdings;', '', creativeControls.bounce);
+            console.log(
+              "[%c\xBC%c] Reduced bounce on body because creative control 'bounce' is set to",
+              'font-family: webdings;',
+              '',
+              creativeControls.bounce
+            );
           }
         }
       }
@@ -1833,14 +2056,14 @@ function getPWADisplayMode() {
 
         Body.setPosition(body, {
           ...body.position,
-          [xy]: body.position[xy] + (body._move[xy].speed * body._move[xy].dir)
+          [xy]: body.position[xy] + body._move[xy].speed * body._move[xy].dir,
         });
       }
     });
   });
 
   // after tick
-  Events.on(runner, "afterTick", () => {
+  Events.on(runner, 'afterTick', () => {
     // draw score
     if (difficultiesWithScores.includes(difficulty)) {
       render.context.font = '30px Arial';
@@ -1850,7 +2073,7 @@ function getPWADisplayMode() {
 
     // take death screenshots
     if (shouldTakeDeathScreenshot && deathScreenshots.length == 0) {
-      render.canvas.toBlob(blob => {
+      render.canvas.toBlob((blob) => {
         deathScreenshots.push(blob);
       });
     }
@@ -1859,45 +2082,49 @@ function getPWADisplayMode() {
     if (dead) {
       Render.lookAt(
         render,
-        Composite.allBodies(engine.world).filter(body => body.position.y <= deathDetector.position.y && (
-          is_playing_level ? (!body.label.includes('realGround')) : (!body.label.includes('victoryDetector'))
-        )),
+        Composite.allBodies(engine.world).filter(
+          (body) =>
+            body.position.y <= deathDetector.position.y &&
+            (is_playing_level
+              ? !body.label.includes('realGround')
+              : !body.label.includes('victoryDetector'))
+        ),
         {
           x: 100,
-          y: 100
+          y: 100,
         }
       );
 
       shouldTakeDeathScreenshot = true;
-    }
-    else {
+    } else {
       if (recent && recent.placed && recent.position.y - camera_y <= 100)
         camera_y -= 5;
 
       // move camera
-      Render.lookAt(
-        render,
-        [{
+      Render.lookAt(render, [
+        {
           bounds: {
             min: {
               x: 0,
-              y: camera_y
+              y: camera_y,
             },
             max: {
               x: cnvWidth,
-              y: cnvHeight + camera_y
-            }
-          }
-        }]
-      );
+              y: cnvHeight + camera_y,
+            },
+          },
+        },
+      ]);
     }
 
     // send vertices to server
     // if in multiplayer game
     if (is_playing_multiplayer) {
       socket.volatile.emit('game data', {
-        vertices: Composite.allBodies(engine.world).map(body => body.vertices.map(vertice => [vertice.x, vertice.y])),
-        score
+        vertices: Composite.allBodies(engine.world).map((body) =>
+          body.vertices.map((vertice) => [vertice.x, vertice.y])
+        ),
+        score,
       });
     }
   });
@@ -1912,7 +2139,11 @@ function getPWADisplayMode() {
     if (mediaRecorder && mediaRecorder.state == 'recording')
       mediaRecorder.stop();
     else
-      console.warn(`[%ci%c] Didn\'t stop recording because state is in "${mediaRecorder?.state}"`, 'font-family: webdings;', '');
+      console.warn(
+        `[%ci%c] Didn\'t stop recording because state is in "${mediaRecorder?.state}"`,
+        'font-family: webdings;',
+        ''
+      );
 
     // update death screen scores
     scoreH.innerText = score;
@@ -1937,8 +2168,7 @@ function getPWADisplayMode() {
     // change retry button
     if (is_playing_level) {
       retryBtn.innerText = 'Retry level';
-    }
-    else {
+    } else {
       retryBtn.innerText = 'Retry';
     }
 
@@ -1947,29 +2177,20 @@ function getPWADisplayMode() {
   };
 
   // when a collision starts
-  Events.on(engine, 'collisionStart', async e => {
+  Events.on(engine, 'collisionStart', async (e) => {
     for (const pair of e.pairs) {
       const a = pair.bodyA;
       const b = pair.bodyB;
 
       // sound effect
-      if ((
-        a.label.includes('block') &&
-        (dead ? true : !a.placed)
-      ) || (
-          b.label.includes('block') &&
-          (dead ? true : !b.placed)
-        )
+      if (
+        (a.label.includes('block') && (dead ? true : !a.placed)) ||
+        (b.label.includes('block') && (dead ? true : !b.placed))
       )
         await playPopAudio();
 
       // if a body collides with the deathDetector
-      if (
-        (!won) && (
-          a.label == 'deathDetector' ||
-          b.label == 'deathDetector'
-        )
-      ) {
+      if (!won && (a.label == 'deathDetector' || b.label == 'deathDetector')) {
         if (difficultiesWithDeaths.includes(difficulty)) {
           console.log('[%cw%c] Death', 'font-family: webdings;', '');
 
@@ -1984,41 +2205,70 @@ function getPWADisplayMode() {
               deathInfo.innerText = '';
 
               // save to DB
-              fetch('/submit-score?filterAwarded=true' + (isCheesgle? `&uid=${cheesgle('uid') || ''}` : ''), {
-                method: 'POST',
-                body: `${difficulty},${score},${+is_playing_level},${is_playing_level ? is_playing_level_lid : ''},0`
-              })
-                .then(resp => resp.json())
-                .then(resp => {
-                  console.log(`[%c\xC2%c] Sent score to server (IPL = ${+is_playing_level}):`, 'font-family: webdings;', '', resp.message);
+              fetch(
+                '/submit-score?filterAwarded=true' +
+                  (isCheesgle ? `&uid=${cheesgle('uid') || ''}` : ''),
+                {
+                  method: 'POST',
+                  body: `${difficulty},${score},${+is_playing_level},${
+                    is_playing_level ? is_playing_level_lid : ''
+                  },0`,
+                }
+              )
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  console.log(
+                    `[%c\xC2%c] Sent score to server (IPL = ${+is_playing_level}):`,
+                    'font-family: webdings;',
+                    '',
+                    resp.message
+                  );
                   deathInfo.innerText = resp.message;
 
                   if (resp.achievements.length > 0) {
                     getAchievements()
-                      .then(data => {
-                        showPopup('Achievements completed!', `<ul>${resp.achievements.map(id => `<li><h3>${achievements_cache.achievements[id].name}</h3></li>`).join('')}</ul>`);
+                      .then((data) => {
+                        showPopup(
+                          'Achievements completed!',
+                          `<ul>${resp.achievements
+                            .map(
+                              (id) =>
+                                `<li><h3>${achievements_cache.achievements[id].name}</h3></li>`
+                            )
+                            .join('')}</ul>`
+                        );
                       })
-                      .catch(err => {
-                        showPopup('Error', `Error showing achievements:<br><samp>${err}</samp>`);
+                      .catch((err) => {
+                        showPopup(
+                          'Error',
+                          `Error showing achievements:<br><samp>${err}</samp>`
+                        );
                       });
                   }
                 })
-                .catch(err => {
-                  console.log('[%cr%c] Error submitting score to server:', 'font-family: webdings;', '', err);
+                .catch((err) => {
+                  console.log(
+                    '[%cr%c] Error submitting score to server:',
+                    'font-family: webdings;',
+                    '',
+                    err
+                  );
                 });
 
               // check if in a multiplayer game
               if (is_playing_multiplayer) {
                 // send death to server
                 socket.emit('death');
-              }
-              else {
+              } else {
                 // show death screen
-                showDeathScreenTimeout = setTimeout(showDeathScreenTimeoutFunc, 2500);
+                showDeathScreenTimeout = setTimeout(
+                  showDeathScreenTimeoutFunc,
+                  2500
+                );
               }
 
               // wake all bodies
-              Composite.allBodies(engine.world).forEach(body => {
+              Composite.allBodies(engine.world).forEach((body) => {
                 if (body.label.includes('block')) {
                   // wake body
                   Matter.Sleeping.set(body, false);
@@ -2047,10 +2297,8 @@ function getPWADisplayMode() {
       // make static for no bouncing
       // and save placed state
       if (a.label.includes('block') && !a.placed) {
-        if (tests[3])
-          Body.setStatic(a, true);
-        if (tests[4])
-          Matter.Sleeping.set(a, true);
+        if (tests[3]) Body.setStatic(a, true);
+        if (tests[4]) Matter.Sleeping.set(a, true);
         if (tests[5]) {
           if (Math.abs(a.angularVelocity) <= tests[5.1]) {
             Body.setAngularVelocity(a, 0);
@@ -2067,10 +2315,8 @@ function getPWADisplayMode() {
         a.placed = true;
       }
       if (b.label.includes('block') && !b.placed) {
-        if (tests[3])
-          Body.setStatic(b, true);
-        if (tests[4])
-          Matter.Sleeping.set(b, true);
+        if (tests[3]) Body.setStatic(b, true);
+        if (tests[4]) Matter.Sleeping.set(b, true);
         if (tests[5]) {
           if (Math.abs(b.angularVelocity) <= tests[5.1]) {
             Body.setAngularVelocity(b, 0);
@@ -2089,18 +2335,14 @@ function getPWADisplayMode() {
 
       // make blocks static
       if (tests[2] || creativeControls.static) {
-        if (a.label.includes('block'))
-          Body.setStatic(a, true);
-        if (b.label.includes('block'))
-          Body.setStatic(b, true);
+        if (a.label.includes('block')) Body.setStatic(a, true);
+        if (b.label.includes('block')) Body.setStatic(b, true);
       }
 
       // creative controls static
       if (creativeControls.static) {
-        if (a.label.includes('block'))
-          a.label += ' ground';
-        if (b.label.includes('block'))
-          b.label += ' ground';
+        if (a.label.includes('block')) a.label += ' ground';
+        if (b.label.includes('block')) b.label += ' ground';
       }
 
       // prevent from sinking into the ground
@@ -2108,42 +2350,41 @@ function getPWADisplayMode() {
         if (a.label.includes('block') && a.position.y >= 390)
           Body.setPosition(a, {
             x: a.position.x,
-            y: 380.1
+            y: 380.1,
           });
         if (b.label.includes('block') && b.position.y >= 390)
           Body.setPosition(b, {
             x: b.position.x,
-            y: 380.1
+            y: 380.1,
           });
       }
 
-      if (window.log_collision_labels)
-        console.log(a.label, '||', b.label)
+      if (window.log_collision_labels) console.log(a.label, '||', b.label);
 
       // wake up bodies
-      if (a.label.includes('wake_up_once') || b.label.includes('wake_up_once')) {
+      if (
+        a.label.includes('wake_up_once') ||
+        b.label.includes('wake_up_once')
+      ) {
         Matter.Sleeping.set(a, false);
         Matter.Sleeping.set(b, false);
       }
     }
   });
 
-  Events.on(engine, 'collisionActive', e => {
+  Events.on(engine, 'collisionActive', (e) => {
     for (const pair of e.pairs) {
       const a = pair.bodyA;
       const b = pair.bodyB;
 
       // if a body collides with the victoryDetector
       if (
-        (
-          is_playing_level &&
-          (!is_playing_multiplayer) &&
-          (!dead) &&
-          (!won)
-        ) && (
-          a.label.includes('victoryDetector') ||
-          b.label.includes('victoryDetector')
-        )
+        is_playing_level &&
+        !is_playing_multiplayer &&
+        !dead &&
+        !won &&
+        (a.label.includes('victoryDetector') ||
+          b.label.includes('victoryDetector'))
       ) {
         const c = a.label.includes('victoryDetector') ? b : a;
 
@@ -2154,16 +2395,25 @@ function getPWADisplayMode() {
           won = true;
 
           // send to server
-          fetch('/submit-score?filterAwarded=true' + (isCheesgle? `&uid=${cheesgle('uid') || ''}` : ''), {
-            method: 'POST',
-            body: `${difficulty},${score},1,${is_playing_level_lid},1`
-          })
-            .then(resp => resp.json())
-            .then(resp => {
+          fetch(
+            '/submit-score?filterAwarded=true' +
+              (isCheesgle ? `&uid=${cheesgle('uid') || ''}` : ''),
+            {
+              method: 'POST',
+              body: `${difficulty},${score},1,${is_playing_level_lid},1`,
+            }
+          )
+            .then((resp) => resp.json())
+            .then((resp) => {
               updateLevels();
             })
-            .catch(err => {
-              console.error('[%cr%c] Error submitting score to server:', 'font-family: webdings;', '', err);
+            .catch((err) => {
+              console.error(
+                '[%cr%c] Error submitting score to server:',
+                'font-family: webdings;',
+                '',
+                err
+              );
             });
 
           setTimeout(() => {
@@ -2181,15 +2431,13 @@ function getPWADisplayMode() {
         Matter.Sleeping.set(a, false);
         Matter.Sleeping.set(b, false);
 
-        if (!a.label.includes('wake_up2'))
-          a.label += ' wake_up2';
-        if (!b.label.includes('wake_up2'))
-          b.label += ' wake_up2';
+        if (!a.label.includes('wake_up2')) a.label += ' wake_up2';
+        if (!b.label.includes('wake_up2')) b.label += ' wake_up2';
       }
     }
   });
 
-  Events.on(engine, 'collisionEnd', e => {
+  Events.on(engine, 'collisionEnd', (e) => {
     for (const pair of e.pairs) {
       const a = pair.bodyA;
       const b = pair.bodyB;
@@ -2203,14 +2451,13 @@ function getPWADisplayMode() {
   });
 
   // on space
-  const clickHandler = e => {
+  const clickHandler = (e) => {
     if (
       !dead &&
-      typeof current != 'number' && (
-        (e.type == 'keydown' && e.code == 'Space') ||
-        (e.type == 'touchstart') ||
-        (e.type == 'mousedown')
-      ) &&
+      typeof current != 'number' &&
+      ((e.type == 'keydown' && e.code == 'Space') ||
+        e.type == 'touchstart' ||
+        e.type == 'mousedown') &&
       !render.canvas.classList.contains('canvas-bg')
     ) {
       // increment step
@@ -2231,33 +2478,38 @@ function getPWADisplayMode() {
       recent = current;
       current = 0;
 
-      if (difficultiesWithScores.includes(difficulty))
-        score++;
-      else
-        score = 0;
+      if (difficultiesWithScores.includes(difficulty)) score++;
+      else score = 0;
 
       // update canvas debug info
       updateCanvasDebugInfo();
     }
 
     // video recording
-    if (enableRecording(false) && (!dead) && getComputedStyle(container).display != 'none' && !isRecording) {
+    if (
+      enableRecording(false) &&
+      !dead &&
+      getComputedStyle(container).display != 'none' &&
+      !isRecording
+    ) {
       isRecording = true;
 
       // create stream
-      if (!stream)
-        stream = render.canvas.captureStream(24);
+      if (!stream) stream = render.canvas.captureStream(24);
 
       // create media recorder
       if (!mediaRecorder) {
         try {
           mediaRecorder = new MediaRecorder(stream, {
-            mimeType: "video/webm; codecs=vp8"
+            mimeType: 'video/webm; codecs=vp8',
           });
         } catch (err) {
           const lower = err.message.toLowerCase();
 
-          if (lower.includes('notsupportederror') && lower.includes('mimetype')) {
+          if (
+            lower.includes('notsupportederror') &&
+            lower.includes('mimetype')
+          ) {
             // mime type not supported, disable recording
             settings.enableRecording = 'false';
           }
@@ -2265,15 +2517,22 @@ function getPWADisplayMode() {
 
         if (mediaRecorder) {
           // when data is received
-          mediaRecorder.ondataavailable = e => {
-            console.log('[%c\xB7%c] Received recording data', 'font-family: webdings;', '');
+          mediaRecorder.ondataavailable = (e) => {
+            console.log(
+              '[%c\xB7%c] Received recording data',
+              'font-family: webdings;',
+              ''
+            );
 
-            if (enableRecording(false))
-              recordedChunks.push(e.data);
+            if (enableRecording(false)) recordedChunks.push(e.data);
           };
 
-          mediaRecorder.onstart = e => {
-            console.log('[%c\xB7%c] Started recording', 'font-family: webdings;', '');
+          mediaRecorder.onstart = (e) => {
+            console.log(
+              '[%c\xB7%c] Started recording',
+              'font-family: webdings;',
+              ''
+            );
             isRecording = true;
 
             // clear old blob from memory
@@ -2284,13 +2543,12 @@ function getPWADisplayMode() {
           };
 
           // when recording stops
-          mediaRecorder.onstop = e => {
-            if (!enableRecording(false))
-              return;
+          mediaRecorder.onstop = (e) => {
+            if (!enableRecording(false)) return;
 
             // create a blob
             recordedBlob = new Blob(recordedChunks, {
-              type: "video/webm"
+              type: 'video/webm',
             });
 
             // create a blob url
@@ -2299,7 +2557,11 @@ function getPWADisplayMode() {
             // set the download link to the blob url
             downloadRecordingLink.href = recordedUrl;
 
-            console.log('[%c\xB7%c] Stopped recording', 'font-family: webdings;', '');
+            console.log(
+              '[%c\xB7%c] Stopped recording',
+              'font-family: webdings;',
+              ''
+            );
 
             isRecording = false;
           };
@@ -2325,12 +2587,12 @@ function getPWADisplayMode() {
   render.canvas.addEventListener('mousedown', clickHandler);
 
   // popup ok button
-  popupOkBtn.addEventListener('click', e => {
+  popupOkBtn.addEventListener('click', (e) => {
     hidePopup();
   });
 
   // home, buy, select and prize wheel buttons
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     // home buttons
     if (e.target.matches('button.home-btn, button.home-btn *')) {
       // disconnect from server
@@ -2379,8 +2641,7 @@ function getPWADisplayMode() {
       // update user data
       try {
         getUserData2();
-      }
-      catch (err) {
+      } catch (err) {
         console.log('Error loading user data:', err);
       }
 
@@ -2410,22 +2671,31 @@ function getPWADisplayMode() {
       e.target.disabled = true;
 
       console.log('Buying', fullId);
-      buyFromShop(fullId).then(resp => {
-        resp.text().then(text => {
-          if (resp.status != 200)
-            showPopup('Error buying item', text);
+      buyFromShop(fullId)
+        .then((resp) => {
+          resp.text().then((text) => {
+            if (resp.status != 200) showPopup('Error buying item', text);
 
-          console.log('Bought item:', text);
+            console.log('Bought item:', text);
 
-          updateShop();
+            updateShop();
+          });
+        })
+        .catch((err) => {
+          showPopup(
+            'Error',
+            'There was an error buying the following item, please try again later.'
+          );
+
+          console.log(
+            '[%cr%c] Error buying item:',
+            'font-family: webdings;',
+            '',
+            err
+          );
+
+          e.target.disabled = false;
         });
-      }).catch(err => {
-        showPopup('Error', 'There was an error buying the following item, please try again later.');
-
-        console.log('[%cr%c] Error buying item:', 'font-family: webdings;', '', err);
-
-        e.target.disabled = false;
-      });
     }
 
     // select buttons
@@ -2434,18 +2704,27 @@ function getPWADisplayMode() {
 
       e.target.disabled = true;
 
-      selectItem(fullId).then(([text, resp]) => {
-        if (resp.status == 200)
-          updateShop();
-        else
-          showPopup('Error', `Error selecting item:<br><samp>${text}</samp>`);
-      }).catch(err => {
-        showPopup('Error', 'There was an error selecting the following item, please try again later.');
+      selectItem(fullId)
+        .then(([text, resp]) => {
+          if (resp.status == 200) updateShop();
+          else
+            showPopup('Error', `Error selecting item:<br><samp>${text}</samp>`);
+        })
+        .catch((err) => {
+          showPopup(
+            'Error',
+            'There was an error selecting the following item, please try again later.'
+          );
 
-        console.log('[%cr%c] Error selecting item:', 'font-family: webdings;', '', err);
+          console.log(
+            '[%cr%c] Error selecting item:',
+            'font-family: webdings;',
+            '',
+            err
+          );
 
-        e.target.disabled = false;
-      });
+          e.target.disabled = false;
+        });
     }
 
     // prize wheel buttons
@@ -2483,13 +2762,18 @@ function getPWADisplayMode() {
       const id = document.querySelector('input#change-user-inp')?.value.trim();
 
       if (id) {
-        cheesgle('uid', id); cheesgleIsClosing = true;
-        try { localStorage.removeItem('uid'); } catch (err) { };
-        try { Cookies.set('uid', id); } catch (err) { };
+        cheesgle('uid', id);
+        cheesgleIsClosing = true;
+        try {
+          localStorage.removeItem('uid');
+        } catch (err) {}
+        try {
+          Cookies.set('uid', id);
+        } catch (err) {}
 
         showPopup('Loading', 'Loading new account', {
           persistent: true,
-          button: null
+          button: null,
         });
 
         setTimeout(() => {
@@ -2508,17 +2792,20 @@ function getPWADisplayMode() {
 
       if (locked) {
         // ask if wants to skip
-        getUserData(null, true).then(user => {
+        getUserData(null, true).then((user) => {
           if (lid <= user.level + 1)
-            getShop(true).then(shop => {
-              showPopup('Skip level?', `Do you want to skip level ${lp1} for<i class="material-icons" style="vertical-align: middle; font-size: 1.3em;">attach_money</i>${shop.levels.skipPrice} coins?<br><button data-lid="${lid}" id="skip-level-btn" class="deep green">Skip level</button>`, {
-                button: 'Cancel'
-              });
+            getShop(true).then((shop) => {
+              showPopup(
+                'Skip level?',
+                `Do you want to skip level ${lp1} for<i class="material-icons" style="vertical-align: middle; font-size: 1.3em;">attach_money</i>${shop.levels.skipPrice} coins?<br><button data-lid="${lid}" id="skip-level-btn" class="deep green">Skip level</button>`,
+                {
+                  button: 'Cancel',
+                }
+              );
             });
         });
 
-        if (lock.dataset.anim)
-          clearTimeout(parseInt(lock.dataset.anim));
+        if (lock.dataset.anim) clearTimeout(parseInt(lock.dataset.anim));
 
         lock.style.animationName = 'shake';
         lock.dataset.anim = setTimeout(() => {
@@ -2528,8 +2815,7 @@ function getPWADisplayMode() {
         return;
       }
 
-      if (isNaN(lid) || typeof lid != 'number')
-        return;
+      if (isNaN(lid) || typeof lid != 'number') return;
 
       playLevel(lid);
     }
@@ -2542,38 +2828,35 @@ function getPWADisplayMode() {
         method: 'POST',
         body: 'true',
         headers: {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
+        },
+      }).then((resp) => {
+        if (resp.ok) {
+          hidePopup();
+          getUserData2().then(() => {
+            updateLevels();
+          });
+        } else {
+          resp.text().then((text) => {
+            showPopup('Error', `Error skipping level: ${text}`);
+          });
         }
-      })
-        .then(resp => {
-          if (resp.ok) {
-            hidePopup();
-            getUserData2().then(() => {
-              updateLevels();
-            });
-          } else {
-            resp.text().then(text => {
-              showPopup('Error', `Error skipping level: ${text}`);
-            });
-          }
-        });
+      });
     }
   });
 
   // when user clicks outside popup
-  popupContainer.addEventListener('click', e => {
+  popupContainer.addEventListener('click', (e) => {
     if (e.target.matches('div#popup-container')) {
       // check if popup is persistent
       if (popupContainer.classList.contains('persistent')) {
         console.debug('Prevented hiding popup because it is persistent');
-      }
-      else
-        hidePopup();
+      } else hidePopup();
     }
   });
 
   // retry button
-  retryBtn.addEventListener('click', e => {
+  retryBtn.addEventListener('click', (e) => {
     console.log('[%cq%c] Resetting...', 'font-family: webdings;', '');
 
     // clear blocks
@@ -2583,8 +2866,7 @@ function getPWADisplayMode() {
     container.appendChild(render.canvas);
 
     // remove the background class
-    if (canvasBackground)
-      render.canvas.classList.remove('canvas-bg');
+    if (canvasBackground) render.canvas.classList.remove('canvas-bg');
 
     // show container and hide death screen
     container.style.display = 'flex';
@@ -2630,14 +2912,20 @@ function getPWADisplayMode() {
   });
 
   // share score button
-  shareScoreBtn.addEventListener('click', e => {
-    console.debug('[%ci%c] There are', 'font-family: webdings;', '', deathScreenshots.length, 'saved death screenshots');
+  shareScoreBtn.addEventListener('click', (e) => {
+    console.debug(
+      '[%ci%c] There are',
+      'font-family: webdings;',
+      '',
+      deathScreenshots.length,
+      'saved death screenshots'
+    );
 
     switch (settings.shareScoreBtnAction) {
       case 'share':
         if (!(navigator.canShare && navigator.share)) {
           console.log('This browser does not support sharing');
-          showPopup('Error', 'This browser doesn\'t support sharing');
+          showPopup('Error', "This browser doesn't support sharing");
           return;
         }
 
@@ -2645,41 +2933,45 @@ function getPWADisplayMode() {
           text: 'Check out my score in Perfectly Balanced!',
           url: 'https://pb.luisafk.repl.co',
           files: [
-            new File([
-              deathScreenshots[0]
-            ], 'perfectly-balanced-score.png', {
-              type: deathScreenshots[0].type
-            })
-          ]
+            new File([deathScreenshots[0]], 'perfectly-balanced-score.png', {
+              type: deathScreenshots[0].type,
+            }),
+          ],
         };
 
         if (navigator.canShare(toShare)) {
-          navigator.share(toShare).then(() => {
-            console.log('Shared death screenshots');
-          }).catch(err => {
-            console.error('Error sharing death screenshots:', err);
-          });
-        }
-        else {
+          navigator
+            .share(toShare)
+            .then(() => {
+              console.log('Shared death screenshots');
+            })
+            .catch((err) => {
+              console.error('Error sharing death screenshots:', err);
+            });
+        } else {
           delete toShare.files;
           toShare.text = `I got a score of ${score} in Perfectly Balanced!`;
 
           if (navigator.canShare(toShare)) {
-            navigator.share(toShare).then(() => {
-              console.log('Shared score text');
-            }).catch(err => {
-              console.error('Error sharing score text:', err);
-            });
-          }
-          else {
-            showPopup('Error', 'Your browser doesn\'t support sharing');
-            console.log('This browser does not support sharing the deathScreenshots or text');
+            navigator
+              .share(toShare)
+              .then(() => {
+                console.log('Shared score text');
+              })
+              .catch((err) => {
+                console.error('Error sharing score text:', err);
+              });
+          } else {
+            showPopup('Error', "Your browser doesn't support sharing");
+            console.log(
+              'This browser does not support sharing the deathScreenshots or text'
+            );
           }
         }
         break;
       case 'download':
         const fr = new FileReader();
-        fr.onload = e => {
+        fr.onload = (e) => {
           shareScoreDownload.href = e.target.result;
           shareScoreDownload.click();
         };
@@ -2687,35 +2979,38 @@ function getPWADisplayMode() {
         break;
       case 'copy':
         const blob = deathScreenshots[0];
-        navigator.clipboard.write([
-          new ClipboardItem({
-            [blob.type]: blob
+        navigator.clipboard
+          .write([
+            new ClipboardItem({
+              [blob.type]: blob,
+            }),
+          ])
+          .then(() => {
+            showPopup('Copied', 'Image was copied to clipboard');
           })
-        ]).then(() => {
-          showPopup('Copied', 'Image was copied to clipboard');
-        }).catch(err => {
-          showPopup('Error', `There was an error copying the image to the clipboard:<br><samp>${err}</samp>`);
-        });
+          .catch((err) => {
+            showPopup(
+              'Error',
+              `There was an error copying the image to the clipboard:<br><samp>${err}</samp>`
+            );
+          });
         break;
     }
   });
 
   // camera scroll
   if (tests[0])
-    render.canvas.addEventListener('wheel', e => {
-      if (e.deltaY > 0)
-        camera_y += 5;
-      else if (e.deltaY < 0)
-        camera_y -= 5;
+    render.canvas.addEventListener('wheel', (e) => {
+      if (e.deltaY > 0) camera_y += 5;
+      else if (e.deltaY < 0) camera_y -= 5;
     });
 
   // on window resize
-  const resizeHandler = e => {
+  const resizeHandler = (e) => {
     if (window.innerWidth < window.innerHeight) {
       container.style.width = '100vw';
       container.style.height = 'auto';
-    }
-    else {
+    } else {
       container.style.width = 'auto';
       container.style.height = '100vh';
     }
@@ -2724,7 +3019,7 @@ function getPWADisplayMode() {
   resizeHandler();
 
   // easy btn
-  easyBtn.addEventListener('click', e => {
+  easyBtn.addEventListener('click', (e) => {
     is_playing_level = false;
     is_playing_level_lid = null;
 
@@ -2754,7 +3049,7 @@ function getPWADisplayMode() {
   });
 
   // hard button
-  hardBtn.addEventListener('click', e => {
+  hardBtn.addEventListener('click', (e) => {
     is_playing_level = false;
     is_playing_level_lid = null;
 
@@ -2784,7 +3079,7 @@ function getPWADisplayMode() {
   });
 
   // levels btn
-  levelsBtn.addEventListener('click', e => {
+  levelsBtn.addEventListener('click', (e) => {
     updateLevels();
 
     setTimeout(() => {
@@ -2798,7 +3093,7 @@ function getPWADisplayMode() {
   });
 
   // creative button
-  creativeBtn.addEventListener('click', e => {
+  creativeBtn.addEventListener('click', (e) => {
     is_playing_level = false;
     is_playing_level_lid = null;
 
@@ -2828,7 +3123,7 @@ function getPWADisplayMode() {
   });
 
   // multiplayer button
-  multiplayerBtn.addEventListener('click', e => {
+  multiplayerBtn.addEventListener('click', (e) => {
     multiplayerScreen.style.display = 'unset';
     homeScreen.style.display = 'none';
     deathScreen.style.display = 'none';
@@ -2840,111 +3135,109 @@ function getPWADisplayMode() {
   });
 
   // new game button
-  newGameBtn.addEventListener('click', e => {
+  newGameBtn.addEventListener('click', (e) => {
     if (navigator.onLine) {
-      if (socket.connected)
-        socket.disconnect();
+      if (socket.connected) socket.disconnect();
 
       socket.connect();
 
       socket.emit('new game');
-    }
-    else {
+    } else {
       showPopup('Error', 'Cannot create new game when offline');
     }
   });
 
   // join game button
-  joinGameBtn.addEventListener('click', e => {
+  joinGameBtn.addEventListener('click', (e) => {
     joinGameScreen.style.display = 'unset';
     multiplayerScreen.style.display = 'none';
   });
 
   // join game id button
-  joinGameIdBtn.addEventListener('click', e => {
+  joinGameIdBtn.addEventListener('click', (e) => {
     if (navigator.onLine) {
-      if (socket.connected)
-        socket.disconnect();
+      if (socket.connected) socket.disconnect();
 
       socket.connect();
 
       socket.emit('join game', joinGameIdInp.value);
-    }
-    else {
+    } else {
       showPopup('Error', 'Cannot join game when offline');
     }
   });
 
   // leaderboard button
-  leaderboardBtn.addEventListener('click', e => {
+  leaderboardBtn.addEventListener('click', (e) => {
     leaderboardScreen.style.display = 'flex';
     homeScreen.style.display = 'none';
 
     let currentUid = null;
     try {
       currentUid = Cookies.get('uid');
-    } catch (err) { } if (!currentUid) {
+    } catch (err) {}
+    if (!currentUid) {
       try {
         currentUid = localStorage.getItem('uid');
-      } catch (err) { } if (!currentUid) {
+      } catch (err) {}
+      if (!currentUid) {
         currentUid = cheesgle('uid');
       }
     }
 
-    getLeaderboard().then(async data => {
-      leaderboardList.textContent = '';
+    getLeaderboard()
+      .then(async (data) => {
+        leaderboardList.textContent = '';
 
-      for (let i = 0; i < data.length; i++) {
-        const row = data[i];
-        let user = {};
-        try {
-          user = await getUserData(row[0]);
+        for (let i = 0; i < data.length; i++) {
+          const row = data[i];
+          let user = {};
+          try {
+            user = await getUserData(row[0]);
+          } catch (err) {
+            console.error('Error fetching user data:', err);
+            continue;
+          }
+
+          const tr = document.createElement('tr');
+          const td1 = document.createElement('td');
+          const td2 = document.createElement('td');
+          const td3 = document.createElement('td');
+          const td4 = document.createElement('td');
+
+          td1.innerText = `#${i + 1}`;
+          td2.innerText = user?.nick || '';
+          td3.innerText = row[1];
+          td4.innerText = user?.coins || 0;
+
+          td2.translate = false;
+          td4.translate = false;
+
+          // nick colors
+          if (user.itemsSelected && user.itemsSelected['nickColors'])
+            if (nickColorClasses.includes(user.itemsSelected['nickColors']))
+              td2.classList.add(user.itemsSelected['nickColors']);
+            else td2.style.color = user.itemsSelected['nickColors'];
+
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+          tr.appendChild(td4);
+
+          // if its the current user
+          if (row[0] == currentUid) {
+            tr.classList.add('leaderboard-this-user');
+          }
+
+          leaderboardList.appendChild(tr);
         }
-        catch (err) {
-          console.error('Error fetching user data:', err);
-          continue;
-        }
-
-        const tr = document.createElement('tr');
-        const td1 = document.createElement('td');
-        const td2 = document.createElement('td');
-        const td3 = document.createElement('td');
-        const td4 = document.createElement('td');
-
-        td1.innerText = `#${i + 1}`;
-        td2.innerText = user?.nick || '';
-        td3.innerText = row[1];
-        td4.innerText = user?.coins || 0;
-
-        td2.translate = false;
-        td4.translate = false;
-
-        // nick colors
-        if (user.itemsSelected && user.itemsSelected['nickColors'])
-          if (nickColorClasses.includes(user.itemsSelected['nickColors']))
-            td2.classList.add(user.itemsSelected['nickColors']);
-          else
-            td2.style.color = user.itemsSelected['nickColors'];
-
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tr.appendChild(td3);
-        tr.appendChild(td4);
-
-        // if its the current user
-        if (row[0] == currentUid) {
-          tr.classList.add('leaderboard-this-user');
-        }
-
-        leaderboardList.appendChild(tr);
-      }
-    }).catch(err => {
-      showPopup('Error', `Error loading leaderboard:<br><samp>${err}</samp>`);
-    });
+      })
+      .catch((err) => {
+        showPopup('Error', `Error loading leaderboard:<br><samp>${err}</samp>`);
+      });
   });
 
   // shop button
-  shopBtn.addEventListener('click', e => {
+  shopBtn.addEventListener('click', (e) => {
     shopScreen.style.display = 'unset';
     homeScreen.style.display = 'none';
     deathScreen.style.display = 'none';
@@ -2956,20 +3249,23 @@ function getPWADisplayMode() {
   });
 
   // edit nick button
-  editNick.addEventListener('click', e => {
+  editNick.addEventListener('click', (e) => {
     nickInp.contentEditable = true;
     nickInp.focus();
     selectElementContents(nickInp);
   });
 
   // cretive controls
-  creativeControlsDiv.addEventListener('click', e => {
+  creativeControlsDiv.addEventListener('click', (e) => {
     if (e.target.matches('input[type=checkbox]')) {
       e.target.blur();
       render.canvas.focus();
-      console.debug('[%ci%c] Blurred checkbox and focused canvas', 'font-family: webdings;', '');
-    }
-    else if (e.target.matches('button#creative-reset-camera')) {
+      console.debug(
+        '[%ci%c] Blurred checkbox and focused canvas',
+        'font-family: webdings;',
+        ''
+      );
+    } else if (e.target.matches('button#creative-reset-camera')) {
       // reset camera
       render.bounds.min.x = 0;
       render.bounds.min.y = 0;
@@ -2978,23 +3274,20 @@ function getPWADisplayMode() {
       camera_y = 0;
 
       // reset current
-      if (typeof current != 'number')
-        Composite.remove(engine.world, current);
+      if (typeof current != 'number') Composite.remove(engine.world, current);
 
       current = 0;
-    }
-    else if (e.target.matches('button#creative-clear-bodies')) {
+    } else if (e.target.matches('button#creative-clear-bodies')) {
       // clear bodies
       clearBlocks();
 
       // reset current
-      if (typeof current != 'number')
-        Composite.remove(engine.world, current);
+      if (typeof current != 'number') Composite.remove(engine.world, current);
 
       current = 0;
     }
   });
-  creativeControlsDiv.addEventListener('input', e => {
+  creativeControlsDiv.addEventListener('input', (e) => {
     if (e.target.matches('select#creative-image-rendering')) {
       render.canvas.style.imageRendering = e.target.value;
       e.target.value = getComputedStyle(render.canvas).imageRendering;
@@ -3002,16 +3295,15 @@ function getPWADisplayMode() {
   });
 
   // on keys
-  const nickHandler = e => {
+  const nickHandler = (e) => {
     if (nickInp.contentEditable) {
       if (e.code == 'Enter' || e.type == 'blur') {
         nickInp.contentEditable = false;
         fetch('/set-nick', {
           method: 'POST',
-          body: nickInp.innerText
+          body: nickInp.innerText,
         });
-      }
-      else if (e.code == 'Escape') {
+      } else if (e.code == 'Escape') {
         nickInp.contentEditable = false;
         nickInp.innerText = user_cache?.nick || '';
       }
@@ -3021,9 +3313,14 @@ function getPWADisplayMode() {
   nickInp.addEventListener('blur', nickHandler);
 
   // get user data
-  Promise.allSettled([getUserData2(true)]).then(res => {
+  Promise.allSettled([getUserData2(true)]).then((res) => {
     if (res[0].status == 'rejected')
-      console.log('[%cr%c] Error updating user data:', 'font-family: webdings;', '', res[0].reason);
+      console.log(
+        '[%cr%c] Error updating user data:',
+        'font-family: webdings;',
+        '',
+        res[0].reason
+      );
 
     // update account switcher
     updateAccountSwitcher();
@@ -3036,63 +3333,77 @@ function getPWADisplayMode() {
 
     // update app version
     let current = getCurrentVersion();
-    getLatestVersion(current).then(version => {
-      // update current version
-      current = version.current;
-      if (isCheesgle) cheesgle('version', current);
-      else localStorage.setItem('version', current);
+    getLatestVersion(current)
+      .then((version) => {
+        // update current version
+        current = version.current;
+        if (isCheesgle) cheesgle('version', current);
+        else localStorage.setItem('version', current);
 
-      // update version indicator
-      PWAVersionSpan.innerText = current;
+        // update version indicator
+        PWAVersionSpan.innerText = current;
 
-      // update version status
-      if (version.latest > current)
-        PWAVersionStatus.innerText = `(latest is v${version.latest})`;
-      else
-        PWAVersionStatus.innerText = `(latest)`;
+        // update version status
+        if (version.latest > current)
+          PWAVersionStatus.innerText = `(latest is v${version.latest})`;
+        else PWAVersionStatus.innerText = `(latest)`;
 
-      // enable/disable update button
-      updatePWABtn.disabled = !version.updateRequired;
-      if (version.updateRequired) {
-        updatePWABtn.innerText = 'Update required';
-      }
-      else {
-        updatePWABtn.innerText = 'Up to date';
-      }
+        // enable/disable update button
+        updatePWABtn.disabled = !version.updateRequired;
+        if (version.updateRequired) {
+          updatePWABtn.innerText = 'Update required';
+        } else {
+          updatePWABtn.innerText = 'Up to date';
+        }
 
-      // check if should show update prompt (after two days)
-      // also check if update is required
-      if ((!window.isShowingCreateAccountPopup) && version.updateRequired && navigator.onLine) {
-        showPopup('Loading', `Loading game data, please wait...<br><div id="loading-game-data-progcont"><div id="loading-game-data-prog"></div></div>`, {
-          button: null,
-          persistent: true
-        });
+        // check if should show update prompt (after two days)
+        // also check if update is required
+        if (
+          !window.isShowingCreateAccountPopup &&
+          version.updateRequired &&
+          navigator.onLine
+        ) {
+          showPopup(
+            'Loading',
+            `Loading game data, please wait...<br><div id="loading-game-data-progcont"><div id="loading-game-data-prog"></div></div>`,
+            {
+              button: null,
+              persistent: true,
+            }
+          );
 
-        const progcont = document.querySelector('div#popup #popup-body div#loading-game-data-progcont');
-        const prog = progcont.querySelector('div#loading-game-data-prog');
+          const progcont = document.querySelector(
+            'div#popup #popup-body div#loading-game-data-progcont'
+          );
+          const prog = progcont.querySelector('div#loading-game-data-prog');
 
-        // clear cache
-        clearCacheBtn.click();
+          // clear cache
+          clearCacheBtn.click();
 
-        // reload in 2 seconds
-        setTimeout(() => {
-          // save new version
-          if (isCheesgle) cheesgle('version', version.latest);
-          else localStorage.setItem('version', version.latest);
+          // reload in 2 seconds
+          setTimeout(() => {
+            // save new version
+            if (isCheesgle) cheesgle('version', version.latest);
+            else localStorage.setItem('version', version.latest);
 
-          // reload
-          location.reload();
-        }, 1925);
-      }
-    }).catch(err => {
-      console.log('[%cr%c] Error fetching app version:', 'font-family: webdings;', '', err);
-    });
+            // reload
+            location.reload();
+          }, 1925);
+        }
+      })
+      .catch((err) => {
+        console.log(
+          '[%cr%c] Error fetching app version:',
+          'font-family: webdings;',
+          '',
+          err
+        );
+      });
   });
 
   // when Open settings button is clicked
-  document.addEventListener('click', e => {
-    if (!e.target.matches('button.settings-btn'))
-      return;
+  document.addEventListener('click', (e) => {
+    if (!e.target.matches('button.settings-btn')) return;
 
     hidePopup();
 
@@ -3104,12 +3415,14 @@ function getPWADisplayMode() {
   });
 
   // when game ID clicked
-  gameIdCopy.addEventListener('click', e => {
-    navigator.clipboard.writeText(`https://ae0.repl.co/p/${gameIdSpan.innerText}`);
+  gameIdCopy.addEventListener('click', (e) => {
+    navigator.clipboard.writeText(
+      `https://ae0.repl.co/p/${gameIdSpan.innerText}`
+    );
   });
 
   // when joined multiplayer game
-  socket.on('joined game', game_id => {
+  socket.on('joined game', (game_id) => {
     // run physics
     runner.enabled = true;
 
@@ -3128,20 +3441,18 @@ function getPWADisplayMode() {
 
     gameIdSpan.innerText = game_id;
 
-    if (user_cache.nick)
-      leftNick.innerText = user_cache.nick;
+    if (user_cache.nick) leftNick.innerText = user_cache.nick;
     rightNick.innerText = 'Waiting for player';
 
     rightCanvas.style.visibility = 'hidden';
 
     // prevent canvas from being background
-    if (canvasBackground)
-      render.canvas.classList.remove('canvas-bg');
+    if (canvasBackground) render.canvas.classList.remove('canvas-bg');
     leftUserDiv.appendChild(render.canvas);
   });
 
   // when multiplayer game starts
-  socket.on('start game', ids => {
+  socket.on('start game', (ids) => {
     is_playing_multiplayer = true;
 
     // make easy
@@ -3170,7 +3481,7 @@ function getPWADisplayMode() {
 
     const user_promises = ids.map(getUserData);
 
-    Promise.all(user_promises).then(users => {
+    Promise.all(user_promises).then((users) => {
       leftNick.innerText = users[0].nick;
       rightNick.innerText = users[1].nick;
 
@@ -3178,18 +3489,14 @@ function getPWADisplayMode() {
       if (users[0].itemsSelected && users[0].itemsSelected['nickColors']) {
         const color = users[0].itemsSelected['nickColors'];
 
-        if (nickColorClasses.includes(color))
-          leftNick.classList.add(color);
-        else
-          leftNick.style.color = color;
+        if (nickColorClasses.includes(color)) leftNick.classList.add(color);
+        else leftNick.style.color = color;
       }
       if (users[1].itemsSelected && users[1].itemsSelected['nickColors']) {
         const color = users[1].itemsSelected['nickColors'];
 
-        if (nickColorClasses.includes(color))
-          rightNick.classList.add(color);
-        else
-          rightNick.style.color = color;
+        if (nickColorClasses.includes(color)) rightNick.classList.add(color);
+        else rightNick.style.color = color;
       }
 
       if (users[1].itemsSelected && users[1].itemsSelected['blockColors']) {
@@ -3197,22 +3504,20 @@ function getPWADisplayMode() {
 
         if (color in blockColorClasses)
           rightCtx.fillStyle = blockColorClasses[color];
-        else
-          rightCtx.fillStyle = color;
-      }
-      else {
+        else rightCtx.fillStyle = color;
+      } else {
         rightCtx.fillStyle = 'white';
       }
     });
   });
 
   // when receive oponent data
-  socket.on('game data', data => {
+  socket.on('game data', (data) => {
     // clear canvas
     rightCtx.clearRect(0, 0, rightCanvas.width, rightCanvas.height);
 
     // draw blocks
-    for (const vertice of (data.vertices || [])) {
+    for (const vertice of data.vertices || []) {
       draw(vertice, rightCtx);
     }
 
@@ -3222,14 +3527,13 @@ function getPWADisplayMode() {
   });
 
   // when there is a winner
-  socket.on('winner', id => {
+  socket.on('winner', (id) => {
     if (id == Cookies.get('uid')) {
       // show victory screen
       victoryScreen.style.display = 'unset';
       multiplayerGameScreen.style.display = 'none';
       container.style.display = 'none';
-    }
-    else {
+    } else {
       // show death screen
       showDeathScreenTimeoutFunc();
     }
@@ -3242,13 +3546,18 @@ function getPWADisplayMode() {
 
   // get disconnect explanations
   let last_disconnect_reason = '';
-  socket.on('disconnect reason', reason => {
+  socket.on('disconnect reason', (reason) => {
     last_disconnect_reason = reason;
   });
 
   // when socket.io disconnects
-  socket.on('disconnect', nerd_reason => {
-    console.log('[%ci%c] Disconnected from server:', 'font-family: webdings;', '', nerd_reason);
+  socket.on('disconnect', (nerd_reason) => {
+    console.log(
+      '[%ci%c] Disconnected from server:',
+      'font-family: webdings;',
+      '',
+      nerd_reason
+    );
 
     if (nerd_reason != 'io client disconnect')
       setTimeout(() => {
@@ -3276,7 +3585,8 @@ function getPWADisplayMode() {
     // remove hash from URL
     location.hash = '';
 
-    joinGameIdInp.value = parsedHash.get('gameId') || parsedProtocol.get('gameId');
+    joinGameIdInp.value =
+      parsedHash.get('gameId') || parsedProtocol.get('gameId');
 
     console.log('Joining game from hash, gameId =', joinGameIdInp.value);
 
@@ -3303,7 +3613,7 @@ function getPWADisplayMode() {
   }
 
   // refresh shop button
-  refreshShopBtn.addEventListener('click', e => {
+  refreshShopBtn.addEventListener('click', (e) => {
     refreshShopBtn.disabled = true;
     updateShop();
   });
@@ -3315,32 +3625,35 @@ function getPWADisplayMode() {
     numSegments: 0,
     innerRadius: 50,
     outerRadius: 200,
-    segments: [
-
-    ],
+    segments: [],
     animation: {
       type: 'spinToStop',
       duration: 5,
       spins: 8,
       callbackBefore: 'this.target.isSpinning = true;',
       callbackAfter: 'drawPrizeWheelMarker(true, true);',
-      callbackFinished: 'this.target.isSpinning = false; this.target.currentTime++; nextSpin(); drawPrizeWheelMarker(true, true);'
+      callbackFinished:
+        'this.target.isSpinning = false; this.target.currentTime++; nextSpin(); drawPrizeWheelMarker(true, true);',
     },
     isSpinning: false,
     times: 1,
-    currentTime: 0
+    currentTime: 0,
   });
 
   // draw prize wheel marker
   drawPrizeWheelMarker(true, true);
 
   // when prize wheel button clicked
-  prizeWheelBtn.addEventListener('click', e => {
+  prizeWheelBtn.addEventListener('click', (e) => {
     // is daily spin
     const isDailySpin = prizeWheelBtn.classList.contains('daily-spin');
 
     if (!prizeWheel.isSpinning) {
-      console.log(`[%ci%c] Spinning prize wheel (isDailySpin = ${isDailySpin})`, 'font-family: webdings;', '');
+      console.log(
+        `[%ci%c] Spinning prize wheel (isDailySpin = ${isDailySpin})`,
+        'font-family: webdings;',
+        ''
+      );
 
       // reset spins
       prizeWheel.currentTime = 0;
@@ -3355,47 +3668,59 @@ function getPWADisplayMode() {
       const times = prizeWheel.times;
 
       // get prize from server
-      getPrizeWheelPrize(times, isDailySpin).then(([prizes, resp]) => {
-        // update coins
-        getUserData2();
+      getPrizeWheelPrize(times, isDailySpin)
+        .then(([prizes, resp]) => {
+          // update coins
+          getUserData2();
 
-        if (resp.status == 200) {
-          console.log(`[%ci%c] Received prizes from server%c: ${prizes.map(p => prizeWheel.segments[p].text).join(', ')}`, 'font-family: webdings;', '', 'color: white;');
+          if (resp.status == 200) {
+            console.log(
+              `[%ci%c] Received prizes from server%c: ${prizes
+                .map((p) => prizeWheel.segments[p].text)
+                .join(', ')}`,
+              'font-family: webdings;',
+              '',
+              'color: white;'
+            );
 
-          // save prizes in prizeWheel object
-          prizeWheel.prizes = prizes;
+            // save prizes in prizeWheel object
+            prizeWheel.prizes = prizes;
 
-          // stop physics
-          runner.enabled = false;
+            // stop physics
+            runner.enabled = false;
 
-          // start spin
-          nextSpin();
-        }
-        else {
-          // show alert
-          showPopup('Error', prizes);
+            // start spin
+            nextSpin();
+          } else {
+            // show alert
+            showPopup('Error', prizes);
+
+            // enable button
+            prizeWheelBtn.disabled = false;
+            prizeWheelTenInp.disabled = false;
+          }
+        })
+        .catch((err) => {
+          showPopup(
+            'Prize wheel error',
+            `There was an error fetching your prizes:<br><samp>${err}</samp>`
+          );
 
           // enable button
           prizeWheelBtn.disabled = false;
-          prizeWheelTenInp.disabled = false;
-        }
-      }).catch(err => {
-        showPopup('Prize wheel error', `There was an error fetching your prizes:<br><samp>${err}</samp>`);
-
-        // enable button
-        prizeWheelBtn.disabled = false;
-        prizeWheelTenInp.disable = false;
-      });
+          prizeWheelTenInp.disable = false;
+        });
     }
   });
 
   window.nextSpin = function nextSpin() {
-    if (prizeWheel.currentTime >= prizeWheel.times)
-      return;
+    if (prizeWheel.currentTime >= prizeWheel.times) return;
 
     // set the wheel to stop at the
     // prize returned by the server
-    prizeWheel.animation.stopAngle = prizeWheel.getRandomForSegment(prizeWheel.prizes[prizeWheel.currentTime]);
+    prizeWheel.animation.stopAngle = prizeWheel.getRandomForSegment(
+      prizeWheel.prizes[prizeWheel.currentTime]
+    );
 
     // reset the wheel angle so it
     // does all of the spins
@@ -3403,16 +3728,15 @@ function getPWADisplayMode() {
 
     // spin the wheel
     prizeWheel.startAnimation();
-  }
+  };
 
   // when x10 checkbox changed
-  prizeWheelTenInp.addEventListener('change', e => {
+  prizeWheelTenInp.addEventListener('change', (e) => {
     if (prizeWheelTenInp.checked) {
       prizeWheel.times = 10;
       prizeWheel.animation.duration = 1;
       prizeWheel.animation.spins = 1;
-    }
-    else {
+    } else {
       prizeWheel.times = 1;
       prizeWheel.animation.duration = 5;
       prizeWheel.animation.spins = 8;
@@ -3420,31 +3744,36 @@ function getPWADisplayMode() {
   });
 
   // when update button is clicked
-  updatePWABtn.addEventListener('click', e => {
+  updatePWABtn.addEventListener('click', (e) => {
     PWAVersionStatus.innerText = '(fetching version info)';
     let current = getCurrentVersion();
-    getLatestVersion(current).then(version => {
-      current = version.current;
+    getLatestVersion(current)
+      .then((version) => {
+        current = version.current;
 
-      PWAVersionStatus.innerText = '(updating)';
-      clearCacheBtn.click();
-      setTimeout(() => {
-        PWAVersionStatus.innerText = '(reloading)';
+        PWAVersionStatus.innerText = '(updating)';
+        clearCacheBtn.click();
+        setTimeout(() => {
+          PWAVersionStatus.innerText = '(reloading)';
 
-        // save new version
-        if (isCheesgle) cheesgle('version', version.latest);
-        else localStorage.setItem('version', version.latest);
+          // save new version
+          if (isCheesgle) cheesgle('version', version.latest);
+          else localStorage.setItem('version', version.latest);
 
-        location.reload();
-      }, 5000);
-    }).catch(err => {
-      PWAVersionStatus.innerText = '(update failed)';
-      showPopup('Update error', `There was an error updating the app:<br><samp>${err}</samp>`);
-    });
+          location.reload();
+        }, 5000);
+      })
+      .catch((err) => {
+        PWAVersionStatus.innerText = '(update failed)';
+        showPopup(
+          'Update error',
+          `There was an error updating the app:<br><samp>${err}</samp>`
+        );
+      });
   });
 
   // when account info clicked
-  accountDiv.addEventListener('click', e => {
+  accountDiv.addEventListener('click', (e) => {
     accountScreen.style.display = 'unset';
     homeScreen.style.display = 'none';
     achievementsScreen.style.display = 'none';
@@ -3455,9 +3784,15 @@ function getPWADisplayMode() {
 
     // update user ID
     try {
-      userIdInp.value = cheesgle('uid') || Cookies.get('uid') || localStorage.getItem('uid');
+      userIdInp.value =
+        cheesgle('uid') || Cookies.get('uid') || localStorage.getItem('uid');
     } catch (err) {
-      console.log("[%cr%c] Error reading user ID:", 'font-family: webdings;', '', err);
+      console.log(
+        '[%cr%c] Error reading user ID:',
+        'font-family: webdings;',
+        '',
+        err
+      );
       userIdInp.value = 'none';
     }
 
@@ -3465,15 +3800,14 @@ function getPWADisplayMode() {
     if (getPWADisplayMode() == 'browser') {
       installPWABtn.disabled = false;
       installPWABtn.innerText = 'Install';
-    }
-    else {
+    } else {
       installPWABtn.disabled = true;
       installPWABtn.innerText = 'Installed';
     }
   });
 
   // account switcher
-  accountSwitcher.addEventListener('change', e => {
+  accountSwitcher.addEventListener('change', (e) => {
     delete cheesgleData.uid;
     Cookies.set('uid', accountSwitcher.value);
     localStorage.removeItem('uid');
@@ -3481,68 +3815,90 @@ function getPWADisplayMode() {
   });
 
   // show user ID
-  userIdShow.addEventListener('click', e => {
+  userIdShow.addEventListener('click', (e) => {
     if (userIdInp.type == 'password') {
       userIdInp.type = 'text';
       userIdShow.innerText = 'visibility_off';
-    }
-    else {
+    } else {
       userIdInp.type = 'password';
       userIdShow.innerText = 'visibility';
     }
   });
 
   // show change user prompt in account screen
-  changeUserBtn.addEventListener('click', e => {
-    showPopup('Change user', '<input type="text" id="change-user-inp" placeholder="Enter user ID" required pattern="[a-zA-Z0-9]+" class="deep green"><button id="change-user-subm" class="deep red">Change</button>');
+  changeUserBtn.addEventListener('click', (e) => {
+    showPopup(
+      'Change user',
+      '<input type="text" id="change-user-inp" placeholder="Enter user ID" required pattern="[a-zA-Z0-9]+" class="deep green"><button id="change-user-subm" class="deep red">Change</button>'
+    );
   });
 
   // clear cache btn
-  clearHTMLCacheBtn.addEventListener('click', async e => {
-    console.log('[%c\xB3%c] Attempting to clear HTML cache', 'font-family: webdings;', '');
+  clearHTMLCacheBtn.addEventListener('click', async (e) => {
+    console.log(
+      '[%c\xB3%c] Attempting to clear HTML cache',
+      'font-family: webdings;',
+      ''
+    );
 
     (await getServiceWorker()).postMessage({
-      type: 'CLEAR_HTML_CACHE'
+      type: 'CLEAR_HTML_CACHE',
     });
   });
-  clearScriptCacheBtn.addEventListener('click', async e => {
-    console.log('[%c\xB3%c] Attempting to clear script cache', 'font-family: webdings;', '');
+  clearScriptCacheBtn.addEventListener('click', async (e) => {
+    console.log(
+      '[%c\xB3%c] Attempting to clear script cache',
+      'font-family: webdings;',
+      ''
+    );
 
     (await getServiceWorker()).postMessage({
-      type: 'CLEAR_SCRIPT_CACHE'
+      type: 'CLEAR_SCRIPT_CACHE',
     });
   });
-  clearStyleCacheBtn.addEventListener('click', async e => {
-    console.log('[%c\xB3%c] Attempting to clear style cache', 'font-family: webdings;', '');
+  clearStyleCacheBtn.addEventListener('click', async (e) => {
+    console.log(
+      '[%c\xB3%c] Attempting to clear style cache',
+      'font-family: webdings;',
+      ''
+    );
 
     (await getServiceWorker()).postMessage({
-      type: 'CLEAR_STYLE_CACHE'
+      type: 'CLEAR_STYLE_CACHE',
     });
   });
-  clearLevelsCacheBtn.addEventListener('click', async e => {
-    console.log('[%c\xB3%c] Attempting to clear levels cache', 'font-family: webdings;', '');
+  clearLevelsCacheBtn.addEventListener('click', async (e) => {
+    console.log(
+      '[%c\xB3%c] Attempting to clear levels cache',
+      'font-family: webdings;',
+      ''
+    );
 
     (await getServiceWorker()).postMessage({
-      type: 'CLEAR_LEVELS_CACHE'
+      type: 'CLEAR_LEVELS_CACHE',
     });
   });
-  clearCacheBtn.addEventListener('click', async e => {
-    console.log('[%c\xB3%c] Attempting to clear all cache', 'font-family: webdings;', '');
+  clearCacheBtn.addEventListener('click', async (e) => {
+    console.log(
+      '[%c\xB3%c] Attempting to clear all cache',
+      'font-family: webdings;',
+      ''
+    );
 
     (await getServiceWorker()).postMessage({
-      type: 'CLEAR_CACHE'
+      type: 'CLEAR_CACHE',
     });
   });
 
   // reload btn
-  cacheReloadBtn.addEventListener('click', e => {
+  cacheReloadBtn.addEventListener('click', (e) => {
     location.reload();
   });
 
   // update CSS display-mode query
   const cssDisplayModeQuery = window.matchMedia('(display-mode: standalone)');
   if (cssDisplayModeQuery) {
-    cssDisplayModeQuery.addEventListener('change', e => {
+    cssDisplayModeQuery.addEventListener('change', (e) => {
       cssDisplayModeQueryResult.innerText = e.matches;
       jsPwaCheckResult.innerText = getPWADisplayMode();
     });
@@ -3553,7 +3909,7 @@ function getPWADisplayMode() {
   jsPwaCheckResult.innerText = getPWADisplayMode();
 
   // when achievements clicked
-  achievementsBtn.addEventListener('click', e => {
+  achievementsBtn.addEventListener('click', (e) => {
     // show achievements screen
     achievementsScreen.style.display = 'unset';
 
@@ -3564,9 +3920,8 @@ function getPWADisplayMode() {
     container.style.display = 'none';
 
     // load achievements
-    getAchievements2().catch(err => {
+    getAchievements2().catch((err) => {
       showPopup('Error', `Error loading achievements:<br><samp>${err}</samp>`);
     });
   });
-
 })();

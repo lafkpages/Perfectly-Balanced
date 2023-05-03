@@ -6,9 +6,26 @@
   --pink: #ff8fff;
   --yellow: #ffd900;
   --red: #ff3333;
-  --rainbow: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
-  --gold: linear-gradient(52deg, gold 0%, #f2e9b6 25%, #fefeb3 50%, gold 60%, #feef9d 75%, white 100%);
-  --silver: linear-gradient(to right, #D7E1EC, #ebf2f9, #D7E1EC, #ebf2f9);
+  --rainbow: linear-gradient(
+    to left,
+    violet,
+    indigo,
+    blue,
+    green,
+    yellow,
+    orange,
+    red
+  );
+  --gold: linear-gradient(
+    52deg,
+    gold 0%,
+    #f2e9b6 25%,
+    #fefeb3 50%,
+    gold 60%,
+    #feef9d 75%,
+    white 100%
+  );
+  --silver: linear-gradient(to right, #d7e1ec, #ebf2f9, #d7e1ec, #ebf2f9);
   --deepshadowcolor: #e0dfdc;
   --deepshadowcolor2: white;
 }
@@ -58,7 +75,10 @@ html.cheesgle body {
 
 .deep-shadow {
   color: var(--deepshadowcolor);
-  text-shadow: 0 -1px 0 var(--deepshadowcolor2), 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 22px 30px rgba(0,0,0,0.9);
+  text-shadow: 0 -1px 0 var(--deepshadowcolor2), 0 1px 0 #2e2e2e,
+    0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626,
+    0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e,
+    0 10px 0 #1c1c1c, 0 22px 30px rgba(0, 0, 0, 0.9);
 }
 
 body {
@@ -76,7 +96,8 @@ body {
   color: black;
 }
 
-button, a {
+button,
+a {
   cursor: pointer;
 }
 
@@ -96,13 +117,14 @@ button, a {
   border-radius: 2px;
 }
 
-button, [class*="material-icons"] {
+button,
+[class*='material-icons'] {
   /*-webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
@@ -149,8 +171,8 @@ div#popup {
 
   pointer-events: auto;
 
-  -webkit-box-shadow: 0px 0px 31px 20px rgba(101,101,101,0.44); 
-  box-shadow: 0px 0px 31px 20px rgba(101,101,101,0.44);
+  -webkit-box-shadow: 0px 0px 31px 20px rgba(101, 101, 101, 0.44);
+  box-shadow: 0px 0px 31px 20px rgba(101, 101, 101, 0.44);
 }
 
 div#home-screen {
@@ -175,7 +197,8 @@ div#home-screen div#home-btns {
 }
 
 @media only screen and (max-width: 300px) {
-  div#home-screen h1, div#home-screen #title-shadow {
+  div#home-screen h1,
+  div#home-screen #title-shadow {
     font-size: 2.5rem;
   }
 
@@ -183,7 +206,11 @@ div#home-screen div#home-btns {
     grid-template-columns: 1fr 1fr !important;
   }
 
-  div#top-left, div#top-right, div#bottom-right, [class*=material-icons], div#home-screen div#home-btns button {
+  div#top-left,
+  div#top-right,
+  div#bottom-right,
+  [class*='material-icons'],
+  div#home-screen div#home-btns button {
     font-size: 1rem !important;
   }
 
@@ -198,9 +225,10 @@ div#home-screen div#home-btns {
   }
 }
 
-div#home-screen h1, div#home-screen #title-shadow {
+div#home-screen h1,
+div#home-screen #title-shadow {
   font-size: 3rem;
-  letter-spacing: .1em;
+  letter-spacing: 0.1em;
 
   text-align: center;
   text-transform: capitalize;
@@ -213,7 +241,8 @@ div#home-screen h1, div#home-screen #title-shadow {
   color: var(--cyan);
 }
 
-html.cheesgle div#home-screen h1, div#home-screen #title-shadow {
+html.cheesgle div#home-screen h1,
+div#home-screen #title-shadow {
   color: var(--yellow);
 }
 
@@ -229,11 +258,13 @@ div#home-screen #title-shadow {
 
   top: 0px;
 
-  -webkit-box-shadow: 0px 0px 50px 10px var(--cyan); 
+  -webkit-box-shadow: 0px 0px 50px 10px var(--cyan);
   box-shadow: 0px 0px 50px 10px var(--cyan);
 }
 
-div#top-left, div#top-right, div#bottom-right {
+div#top-left,
+div#top-right,
+div#bottom-right {
   position: fixed;
 
   top: 0px;
@@ -262,7 +293,8 @@ div#bottom-right {
   bottom: 0px;
 }
 
-div#top-left > *, div#top-right > * {
+div#top-left > *,
+div#top-right > * {
   display: flex;
 
   align-items: center;

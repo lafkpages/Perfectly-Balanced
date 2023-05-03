@@ -1,15 +1,14 @@
-const Database = require("@replit/database");
+const Database = require('@replit/database');
 const db = new Database();
 
-db.list().then(uids => {
+db.list().then((uids) => {
   let deletable = [];
 
-  let proms = uids.map(uid => db.get(uid));
+  let proms = uids.map((uid) => db.get(uid));
 
-  Promise.allSettled(proms).then(users => {
+  Promise.allSettled(proms).then((users) => {
     users.forEach((user, i) => {
-      if (user.status != 'fulfilled')
-      {
+      if (user.status != 'fulfilled') {
         console.error('Error:', user.reason);
         return;
       }
@@ -18,15 +17,17 @@ db.list().then(uids => {
 
       const keys = Object.keys(user.value);
 
-      if (keys.length == 1 && keys[0] == 'nick' && /Player\d+/.test(user.value.nick))
-      {
+      if (
+        keys.length == 1 &&
+        keys[0] == 'nick' &&
+        /Player\d+/.test(user.value.nick)
+      ) {
         console.log(uid, user.value);
         deletable.push(uid);
       }
     });
 
-    if (!deletable.length)
-    {
+    if (!deletable.length) {
       console.log('No empty accounts to delete. Check back later.');
       return;
     }
@@ -35,8 +36,7 @@ db.list().then(uids => {
     console.log('Deleting in 5 seconds (ctrl + c to cancel)');
 
     setTimeout(() => {
-      for (const uid of deletable)
-      {
+      for (const uid of deletable) {
         db.delete(uid).then(() => {
           console.log('Deleted', uid);
         });
