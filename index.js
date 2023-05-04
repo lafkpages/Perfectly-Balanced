@@ -13,7 +13,6 @@ const achievements = require('./achievements.json');
 const leaderboardIgnore = require('./leaderboardIgnore.json');
 const { OAuth2Client } = require('google-auth-library');
 const dbUptime = require('./dbUptime.js');
-const axios = require('axios');
 const BadWordFilter = require('bad-words');
 
 makeConsoleSafe(console);
@@ -240,17 +239,18 @@ async function sendWebhook(message, user = null) {
   }
 
   try {
-    const resp = await axios.post(
+    const resp = await fetch(
       `${process.env.DISCORD_WEBHOOK}?wait=true`,
-      message,
       {
+        method: 'POST',
+        body: JSON.stringify(message),
         headers: {
           'Content-Type': 'application/json',
         },
       }
     );
 
-    return resp.data;
+    return await resp.json();
   } catch (err) {
     console.error(`Error sending Webhook, ${err}`);
     return null;
