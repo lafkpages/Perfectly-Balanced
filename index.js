@@ -14,6 +14,7 @@ const leaderboardIgnore = require('./leaderboardIgnore.json');
 const { OAuth2Client } = require('google-auth-library');
 const dbUptime = require('./dbUptime.js');
 const axios = require('axios');
+const BadWordFilter = require('bad-words');
 
 makeConsoleSafe(console);
 
@@ -57,6 +58,34 @@ const coinsMultiplierByDifficulty = {
   easy: 1,
   hard: 2,
 };
+
+// bad words filter
+const badWordsFilter = new BadWordFilter();
+
+function cleanBadWords(s, filter = badWordsFilter) {
+  s = s.replace(/\u200B|\u200C|\x00/g, '');
+
+  for (const swear of filter.list) {
+    if (filter.exclude && filter.exclude.includes(swear.toLowerCase())) {
+      continue;
+    }
+
+    s = s.replace(
+      new RegExp(
+        swear.replace(
+          /([\.\*\-\\\/\?\+\{\}\[\]\|\(\)])/g,
+          '\\$1'
+        ),
+        'gi'
+      ),
+      '*'.repeat(
+        swear.length
+      )
+    );
+  }
+
+  return s;
+}
 
 const app = express();
 const server = http.createServer(app);
@@ -503,10 +532,12 @@ app.post('/set-nick', (req, res) => {
         // save old nick
         const old_nick = user.nick;
 
-        // save and trim whitespace
-        user.nick = req.body
-          .trim()
-          .replace(/[\u200B\u200C\u200E\u200F\u2061\u2062\u2063\u2064]/g, '');
+        // save, filter and trim whitespace
+        user.nick = cleanBadWords(
+          req.body
+            .trim()
+            .replace(/[\u200B\u200C\u200E\u200F\u2061\u2062\u2063\u2064]/g, '')
+        );
 
         const shortNick2 = user.nick.substr(0, 10);
 
