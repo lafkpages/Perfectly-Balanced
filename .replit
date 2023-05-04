@@ -16,6 +16,7 @@ channel = "stable-22_11"
 
 [env]
 XDG_CONFIG_HOME = "/home/runner/.config"
+PATH = "/home/runner/$REPL_SLUG/db_utils:$PATH"
 
 [packager]
 language = "nodejs"
