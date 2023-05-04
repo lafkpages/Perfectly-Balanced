@@ -1,5 +1,11 @@
 node_modules
 .breakpoints
+
+# Logs and stuff
 db_utils/old_logs_and_stuff
+
+# Leaderboard data
 leaderboard.json
+
+# Symlinks for shell commands
 db_utils/db-url
