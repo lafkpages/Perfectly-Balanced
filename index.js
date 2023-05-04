@@ -71,15 +71,10 @@ function cleanBadWords(s, filter = badWordsFilter) {
 
     s = s.replace(
       new RegExp(
-        swear.replace(
-          /([\.\*\-\\\/\?\+\{\}\[\]\|\(\)])/g,
-          '\\$1'
-        ),
+        swear.replace(/([\.\*\-\\\/\?\+\{\}\[\]\|\(\)])/g, '\\$1'),
         'gi'
       ),
-      '*'.repeat(
-        swear.length
-      )
+      '*'.repeat(swear.length)
     );
   }
 
@@ -239,16 +234,13 @@ async function sendWebhook(message, user = null) {
   }
 
   try {
-    const resp = await fetch(
-      `${process.env.DISCORD_WEBHOOK}?wait=true`,
-      {
-        method: 'POST',
-        body: JSON.stringify(message),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const resp = await fetch(`${process.env.DISCORD_WEBHOOK}?wait=true`, {
+      method: 'POST',
+      body: JSON.stringify(message),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     return await resp.json();
   } catch (err) {
