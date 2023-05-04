@@ -2,5 +2,6 @@ node_modules
 .upm
 .cache
 .config
+leaderboard.json
 static/winwheel-*
 static/circular-json.js
