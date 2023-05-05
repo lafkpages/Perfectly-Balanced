@@ -6,6 +6,7 @@
   --pink: #ff8fff;
   --yellow: #ffd900;
   --red: #ff3333;
+  --orange: #FFA500;
   --rainbow: linear-gradient(
     to left,
     violet,
@@ -71,6 +72,10 @@ html.cheesgle body {
 
 .red {
   background: var(--red) !important;
+}
+
+.orange {
+  background: var(--orange) !important;
 }
 
 .deep-shadow {
@@ -340,12 +345,6 @@ div#home-screen div#home-btns {
   grid-template-columns: 175px 175px;
   gap: 7.5px;
   justify-content: center;
-}
-
-/*div#home-btns button:first-child, div#home-btns button:nth-child(2)*/
-div#home-btns button:nth-child(3) {
-  grid-column-start: 1;
-  grid-column-end: 3;
 }
 
 div#home-screen div#home-btns button {
